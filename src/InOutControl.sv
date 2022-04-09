@@ -43,180 +43,180 @@ end
 //     localIoCmdDoneOut <= 1'b1;    
 // endtask
 
-function void writeCmd( input [1:0] cmdLvl, input [3:0] sw, input [1:0] button);
-//********************************CODE FOR writeCmd*************************************************************
-//**************************************************************************************************************
-//**************************************************************************************************************
-    case(cmdLvl)
-        1'b01 : begin  //Get the 4 LSB of the write address
-            //Incrementer for LED1
-            if(swState[0] == 1'b0) begin  
-                if(sw[0] == 1'b1) begin
-                    if(localMemAddrOut[7:0] == 8'hF) begin
-                        localMemAddrOut[7:0] <= 8'h0;
-                    end
-                    else begin
-                        localMemAddrOut[7:0]++;
-                    end
-                end
-            end
-            swState[0] <= sw[0];
+// function void writeCmd( input [1:0] cmdLvl, input [3:0] sw, input [1:0] button);
+// //********************************CODE FOR writeCmd*************************************************************
+// //**************************************************************************************************************
+// //**************************************************************************************************************
+//     case(cmdLvl)
+//         1'b01 : begin  //Get the 4 LSB of the write address
+//             //Incrementer for LED1
+//             if(swState[0] == 1'b0) begin  
+//                 if(sw[0] == 1'b1) begin
+//                     if(localMemAddrOut[7:0] == 8'hF) begin
+//                         localMemAddrOut[7:0] <= 8'h0;
+//                     end
+//                     else begin
+//                         localMemAddrOut[7:0]++;
+//                     end
+//                 end
+//             end
+//             swState[0] <= sw[0];
 
-            //Incrementer for LED1
-            if(swState[1] == 1'b0) begin  
-                if(sw[1] == 1'b1) begin
-                    if(localMemAddrOut[15:8] == 8'hF) begin
-                        localMemAddrOut[15:8] <= 8'h0;
-                    end
-                    else begin
-                        localMemAddrOut[15:8]++;
-                    end
-                end
-            end
-            swState[1] <= sw[1];
+//             //Incrementer for LED1
+//             if(swState[1] == 1'b0) begin  
+//                 if(sw[1] == 1'b1) begin
+//                     if(localMemAddrOut[15:8] == 8'hF) begin
+//                         localMemAddrOut[15:8] <= 8'h0;
+//                     end
+//                     else begin
+//                         localMemAddrOut[15:8]++;
+//                     end
+//                 end
+//             end
+//             swState[1] <= sw[1];
 
-            //Incrementer for LED2
-            if(swState[2] == 1'b0) begin  
-                if(sw[2] == 1'b1) begin
-                    if(localMemAddrOut[23:16] == 8'hF) begin
-                        localMemAddrOut[23:16] <= 8'h0;
-                    end
-                    else begin
-                        localMemAddrOut[23:16]++;
-                    end
-                end
-            end
-            swState[2] <= sw[2];
+//             //Incrementer for LED2
+//             if(swState[2] == 1'b0) begin  
+//                 if(sw[2] == 1'b1) begin
+//                     if(localMemAddrOut[23:16] == 8'hF) begin
+//                         localMemAddrOut[23:16] <= 8'h0;
+//                     end
+//                     else begin
+//                         localMemAddrOut[23:16]++;
+//                     end
+//                 end
+//             end
+//             swState[2] <= sw[2];
 
-            //Incrementer for LED2
-            if(swState[3] == 1'b0) begin  
-                if(sw[3] == 1'b1) begin
-                    if(localMemAddrOut[31:24] == 8'hF) begin
-                        localMemAddrOut[31:24] <= 8'h0;
-                    end
-                    else begin
-                        localMemAddrOut[31:24]++;
-                    end
-                end
-            end
-            swState[3] <= sw[3];
-        end
-        1'b10 : begin //Get the 4 MSB of the write address
-            if(swState[0] == 1'b0) begin  
-                if(sw[0] == 1'b1) begin
-                    if(localMemAddrOut[39:32] == 8'hF) begin
-                        localMemAddrOut[39:32] <= 8'h0;
-                    end
-                    else begin
-                        localMemAddrOut[39:32]++;
-                    end
-                end
-            end
-            swState[0] <= sw[0];
+//             //Incrementer for LED2
+//             if(swState[3] == 1'b0) begin  
+//                 if(sw[3] == 1'b1) begin
+//                     if(localMemAddrOut[31:24] == 8'hF) begin
+//                         localMemAddrOut[31:24] <= 8'h0;
+//                     end
+//                     else begin
+//                         localMemAddrOut[31:24]++;
+//                     end
+//                 end
+//             end
+//             swState[3] <= sw[3];
+//         end
+//         1'b10 : begin //Get the 4 MSB of the write address
+//             if(swState[0] == 1'b0) begin  
+//                 if(sw[0] == 1'b1) begin
+//                     if(localMemAddrOut[39:32] == 8'hF) begin
+//                         localMemAddrOut[39:32] <= 8'h0;
+//                     end
+//                     else begin
+//                         localMemAddrOut[39:32]++;
+//                     end
+//                 end
+//             end
+//             swState[0] <= sw[0];
 
-            //Incrementer for LED1
-            if(swState[1] == 1'b0) begin  
-                if(sw[1] == 1'b1) begin
-                    if(localMemAddrOut[47:40] == 8'hF) begin
-                        localMemAddrOut[47:40] <= 8'h0;
-                    end
-                    else begin
-                        localMemAddrOut[47:40]++;
-                    end
-                end
-            end
-            swState[1] <= sw[1];
+//             //Incrementer for LED1
+//             if(swState[1] == 1'b0) begin  
+//                 if(sw[1] == 1'b1) begin
+//                     if(localMemAddrOut[47:40] == 8'hF) begin
+//                         localMemAddrOut[47:40] <= 8'h0;
+//                     end
+//                     else begin
+//                         localMemAddrOut[47:40]++;
+//                     end
+//                 end
+//             end
+//             swState[1] <= sw[1];
 
-            //Incrementer for LED2
-            if(swState[2] == 1'b0) begin  
-                if(sw[2] == 1'b1) begin
-                    if(localMemAddrOut[55:48] == 8'hF) begin
-                        localMemAddrOut[55:48] <= 8'h0;
-                    end
-                    else begin
-                        localMemAddrOut[55:48]++;
-                    end
-                end
-            end
-            swState[2] <= sw[2];
+//             //Incrementer for LED2
+//             if(swState[2] == 1'b0) begin  
+//                 if(sw[2] == 1'b1) begin
+//                     if(localMemAddrOut[55:48] == 8'hF) begin
+//                         localMemAddrOut[55:48] <= 8'h0;
+//                     end
+//                     else begin
+//                         localMemAddrOut[55:48]++;
+//                     end
+//                 end
+//             end
+//             swState[2] <= sw[2];
 
-            //Incrementer for LED2
-            if(swState[3] == 1'b0) begin  
-                if(sw[3] == 1'b1) begin
-                    if(localMemAddrOut[63:56] == 8'hF) begin
-                        localMemAddrOut[63:56] <= 8'h0;
-                    end
-                    else begin
-                        localMemAddrOut[63:56]++;
-                    end
-                end
-            end
-            swState[3] <= sw[3];
-        end
-        1'b11 : begin   //Get the data to write to said address.
-            if(swState[0] == 1'b0) begin  
-                if(sw[0] == 1'b1) begin
-                    if(localIoDataOut[7:0] == 8'hF) begin
-                        localIoDataOut[7:0] <= 8'h0;
-                    end
-                    else begin
-                        localIoDataOut[7:0]++;
-                    end
-                end
-            end
-            swState[0] <= sw[0];
+//             //Incrementer for LED2
+//             if(swState[3] == 1'b0) begin  
+//                 if(sw[3] == 1'b1) begin
+//                     if(localMemAddrOut[63:56] == 8'hF) begin
+//                         localMemAddrOut[63:56] <= 8'h0;
+//                     end
+//                     else begin
+//                         localMemAddrOut[63:56]++;
+//                     end
+//                 end
+//             end
+//             swState[3] <= sw[3];
+//         end
+//         1'b11 : begin   //Get the data to write to said address.
+//             if(swState[0] == 1'b0) begin  
+//                 if(sw[0] == 1'b1) begin
+//                     if(localIoDataOut[7:0] == 8'hF) begin
+//                         localIoDataOut[7:0] <= 8'h0;
+//                     end
+//                     else begin
+//                         localIoDataOut[7:0]++;
+//                     end
+//                 end
+//             end
+//             swState[0] <= sw[0];
 
-            //Incrementer for LED1
-            if(swState[1] == 1'b0) begin  
-                if(sw[1] == 1'b1) begin
-                    if(localIoDataOut[15:8] == 8'hF) begin
-                        localIoDataOut[15:8] <= 8'h0;
-                    end
-                    else begin
-                        localIoDataOut[15:8]++;
-                    end
-                end
-            end
-            swState[1] <= sw[1];
+//             //Incrementer for LED1
+//             if(swState[1] == 1'b0) begin  
+//                 if(sw[1] == 1'b1) begin
+//                     if(localIoDataOut[15:8] == 8'hF) begin
+//                         localIoDataOut[15:8] <= 8'h0;
+//                     end
+//                     else begin
+//                         localIoDataOut[15:8]++;
+//                     end
+//                 end
+//             end
+//             swState[1] <= sw[1];
 
-            //Incrementer for LED2
-            if(swState[2] == 1'b0) begin  
-                if(sw[2] == 1'b1) begin
-                    if(localIoDataOut[23:16] == 8'hF) begin
-                        localIoDataOut[23:16] <= 8'h0;
-                    end
-                    else begin
-                        localIoDataOut[23:16]++;
-                    end
-                end
-            end
-            swState[2] <= sw[2];
-            //Incrementer for LED2
-            if(swState[3] == 1'b0) begin  
-                if(sw[3] == 1'b1) begin
-                    if(localIoDataOut[31:24] == 8'hF) begin
-                        localIoDataOut[31:24] <= 8'h0;
-                    end
-                    else begin
-                        localIoDataOut[31:24]++;
-                    end
-                end
-            end
-            swState[3] <= sw[3];
-        end
-        2'b10 : begin
-            cmdLvl++;
-            if(cmdLvl == 2'b11)begin //Once command level is incremented past 3, then the memory module takes over and 
-                localIoCmdDoneOut <= 1'b1;
-                cmdLvl <= 2'b00;
-            end
-        end
-    endcase
-//********************************CODE FOR writeCmd*************************************************************
-//**************************************************************************************************************
-//**************************************************************************************************************
+//             //Incrementer for LED2
+//             if(swState[2] == 1'b0) begin  
+//                 if(sw[2] == 1'b1) begin
+//                     if(localIoDataOut[23:16] == 8'hF) begin
+//                         localIoDataOut[23:16] <= 8'h0;
+//                     end
+//                     else begin
+//                         localIoDataOut[23:16]++;
+//                     end
+//                 end
+//             end
+//             swState[2] <= sw[2];
+//             //Incrementer for LED2
+//             if(swState[3] == 1'b0) begin  
+//                 if(sw[3] == 1'b1) begin
+//                     if(localIoDataOut[31:24] == 8'hF) begin
+//                         localIoDataOut[31:24] <= 8'h0;
+//                     end
+//                     else begin
+//                         localIoDataOut[31:24]++;
+//                     end
+//                 end
+//             end
+//             swState[3] <= sw[3];
+//         end
+//         2'b10 : begin
+//             cmdLvl++;
+//             if(cmdLvl == 2'b11)begin //Once command level is incremented past 3, then the memory module takes over and 
+//                 localIoCmdDoneOut <= 1'b1;
+//                 cmdLvl <= 2'b00;
+//             end
+//         end`
+//     endcase
+// //********************************CODE FOR writeCmd*************************************************************
+// //**************************************************************************************************************
+// //**************************************************************************************************************
 
-endfunction
+// endfunction
 
 function void readCmd(input [1:0] cmdLvl, input [3:0] sw, input [1:0] button);
 //********************************CODE FOR readCmd*************************************************************
@@ -231,7 +231,7 @@ function void readCmd(input [1:0] cmdLvl, input [3:0] sw, input [1:0] button);
                         localMemAddrOut[7:0] <= 8'h0;
                     end
                     else begin
-                        localMemAddrOut[7:0]++;
+                        localMemAddrOut[7:0] <= localMemAddrOut[7:0] + 1;
                     end
                 end
             end
@@ -244,7 +244,7 @@ function void readCmd(input [1:0] cmdLvl, input [3:0] sw, input [1:0] button);
                         localMemAddrOut[15:8] <= 8'h0;
                     end
                     else begin
-                        localMemAddrOut[15:8]++;
+                        localMemAddrOut[15:8] <= localMemAddrOut[15:8] + 1;
                     end
                 end
             end
@@ -257,7 +257,7 @@ function void readCmd(input [1:0] cmdLvl, input [3:0] sw, input [1:0] button);
                         localMemAddrOut[23:16] <= 8'h0;
                     end
                     else begin
-                        localMemAddrOut[23:16]++;
+                        localMemAddrOut[23:16] <= localMemAddrOut[23:16] + 1;
                     end
                 end
             end
@@ -270,7 +270,7 @@ function void readCmd(input [1:0] cmdLvl, input [3:0] sw, input [1:0] button);
                         localMemAddrOut[31:24] <= 8'h0;
                     end
                     else begin
-                        localMemAddrOut[31:24]++;
+                        localMemAddrOut[31:24] <= localMemAddrOut[31:24] + 1;
                     end
                 end
             end
@@ -283,7 +283,7 @@ function void readCmd(input [1:0] cmdLvl, input [3:0] sw, input [1:0] button);
                         localMemAddrOut[39:32] <= 8'h0;
                     end
                     else begin
-                        localMemAddrOut[39:32]++;
+                        localMemAddrOut[39:32] <= localMemAddrOut[39:32] + 1;
                     end
                 end
             end
@@ -296,7 +296,7 @@ function void readCmd(input [1:0] cmdLvl, input [3:0] sw, input [1:0] button);
                         localMemAddrOut[47:40] <= 8'h0;
                     end
                     else begin
-                        localMemAddrOut[47:40]++;
+                        localMemAddrOut[47:40] <= localMemAddrOut[47:40] + 1;
                     end
                 end
             end
@@ -309,7 +309,7 @@ function void readCmd(input [1:0] cmdLvl, input [3:0] sw, input [1:0] button);
                         localMemAddrOut[55:48] <= 8'h0;
                     end
                     else begin
-                        localMemAddrOut[55:48]++;
+                        localMemAddrOut[55:48] <= localMemAddrOut[55:48] + 1;
                     end
                 end
             end
@@ -322,14 +322,14 @@ function void readCmd(input [1:0] cmdLvl, input [3:0] sw, input [1:0] button);
                         localMemAddrOut[63:56] <= 8'h0;
                     end
                     else begin
-                        localMemAddrOut[63:56]++;
+                        localMemAddrOut[63:56] <= localMemAddrOut[63:56] + 1;
                     end
                 end
             end
             swState[3] <= sw[3];
         end
         1'b11 : begin   //Get the data from address specified in command level 1 and 2
-            cmdLvl++;
+            cmdLvl <= cmdLvl + 1;
             if(cmdLvl == 2'b11) begin//Once command level is incremented past 3, then the memory module takes over and 
                 localIoCmdDoneOut <= 1'b1;
                 cmdLvl <= 2'b00;
@@ -343,17 +343,17 @@ function void readCmd(input [1:0] cmdLvl, input [3:0] sw, input [1:0] button);
 endfunction
 
 // function void cmdReset();
-//     cmdLvl <= 2'b00; //Sets the level of the command to 0 (i.e. select instruction level)
-//     //dispData <= idklol
-//     localIoDataOut <= 16'h0000;
-//     localMemCmd <= 2'b11;
-//     currentCmd <= 2'b00; //Sets the current command to clear
+    // cmdLvl <= 2'b00; //Sets the level of the command to 0 (i.e. select instruction level)
+    // //dispData <= idklol
+    // localIoDataOut <= 16'h0000;
+    // localMemCmd <= 2'b11;
+    // currentCmd <= 2'b00; //Sets the current command to clear
 // endfunction
 
 
 always @(posedge clk) begin
     if(memCmdDoneIn == 1'b1) begin
-        if(canChangeCmd == 1'b1 && button != 2'b00) begin
+        // if(canChangeCmd == 1'b1 && button != 2'b00) begin
             case(button)
                 2'b11 : begin  //Command Reset, acts like Ctrl + C in a terminal and resets the command to be exectued to clear
                     if(currentCmd != 2'b00) begin //If the cmd is alread on clear do not reset the cmd
@@ -361,43 +361,49 @@ always @(posedge clk) begin
                         //dispData <= idklol
                         localIoDataOut <= 16'h0000;
                         localMemCmd <= 2'b11;
-                        currentCmd <= 2'b00; //Sets the current command to clear                    end
+                        currentCmd <= 2'b00; //Sets the current command to clear
+                        canChangeCmd <= 1'b1;
+                    end
                 end
                 2'b10 : begin
                     if(currentCmd == 2'b00) begin //Initiate Clear
-                        cmdLvl++;
+                        cmdLvl <= cmdLvl + 1;
                         canChangeCmd <= 1'b0;
                     end
                     else if(currentCmd == 2'b01) begin //Initiate Write
-                        cmdLvl++;
+                        cmdLvl <= cmdLvl + 1;
                         canChangeCmd <= 1'b0;
                     end
                     else if(currentCmd == 2'b10) begin//Initiate Read
-                        cmdLvl++;
+                        cmdLvl <= cmdLvl + 1;
                         canChangeCmd <= 1'b0;
                     end
-                    else begin     //Default statement
-                        cmdReset();
+                    else begin    
+                        //Default statement executes cmdReset()
+                        cmdLvl <= 2'b00; 
+                        //dispData <= idklol
+                        localIoDataOut <= 16'h0000;
+                        localMemCmd <= 2'b11;
+                        currentCmd <= 2'b00;
                     end
                 end
                 2'b01: begin     //Increment current Command Mode (doubles as default)
-                    if(currentCmd == 2'b10 || currentCmd == 2'b11) begin
-                        currentCmd <= 2'b00;
-                    end 
-                    else begin
-                        currentCmd++;
+                    if(canChangeCmd == 2'b1) begin
+                        if(currentCmd == 2'b10 || currentCmd == 2'b11) begin
+                            currentCmd <= 2'b00;
+                        end 
+                        else begin
+                            currentCmd <= currentCmd + 1;
+                        end
                     end
                 end
                 default : begin
                 end
             endcase
-        end
-    // end
+        // end
     // if(memCmdDoneIn == 1'b1) begin //Execute the right command 
         case(currentCmd)
             2'b00 : begin
-                // localIoCmdDoneOut <= 1'b0;
-                //clearCmd(nextAddr);
                 localMemCmd <= 2'b00;
                 localIoDataOut <= 16'h0000;
                 localMemAddrOut <= nextAddr;
@@ -411,18 +417,194 @@ always @(posedge clk) begin
                 nextAddr++;
             end
             2'b01 : begin
-                writeCmd(cmdLvl,sw,button);
+                //********************************CODE FOR writeCmd*************************************************************
+                //**************************************************************************************************************
+                //**************************************************************************************************************
+                case(cmdLvl)
+                    1'b01 : begin  //Get the 4 LSB of the write address
+                        //Incrementer for LED0
+                        if(swState[0] == 1'b0) begin  
+                            if(sw[0] == 1'b1) begin
+                                if(localMemAddrOut[7:0] == 8'hF) begin
+                                    localMemAddrOut[7:0] <= 8'h0;
+                                end
+                                else begin
+                                    localMemAddrOut[7:0] <= localMemAddrOut[7:0] + 1;
+                                end
+                            end
+                        end
+                        swState[0] <= sw[0];
 
+                        //Incrementer for LED1
+                        if(swState[1] == 1'b0) begin  
+                            if(sw[1] == 1'b1) begin
+                                if(localMemAddrOut[15:8] == 8'hF) begin
+                                    localMemAddrOut[15:8] <= 8'h0;
+                                end
+                                else begin
+                                    localMemAddrOut[15:8] <= localMemAddrOut[15:8] + 1;
+                                end
+                            end
+                        end
+                        swState[1] <= sw[1];
+
+                        //Incrementer for LED2
+                        if(swState[2] == 1'b0) begin  
+                            if(sw[2] == 1'b1) begin
+                                if(localMemAddrOut[23:16] == 8'hF) begin
+                                    localMemAddrOut[23:16] <= 8'h0;
+                                end
+                                else begin
+                                    localMemAddrOut[23:16] <= localMemAddrOut[23:16] + 1;
+                                end
+                            end
+                        end
+                        swState[2] <= sw[2];
+
+                        //Incrementer for LED3
+                        if(swState[3] == 1'b0) begin  
+                            if(sw[3] == 1'b1) begin
+                                if(localMemAddrOut[31:24] == 8'hF) begin
+                                    localMemAddrOut[31:24] <= 8'h0;
+                                end
+                                else begin
+                                    localMemAddrOut[31:24] <= localMemAddrOut[31:24] + 1;
+                                end
+                            end
+                        end
+                        swState[3] <= sw[3];
+                    end
+                    1'b10 : begin //Get the 4 MSB of the write address
+                        //Incrementer for LED0
+                        if(swState[0] == 1'b0) begin  
+                            if(sw[0] == 1'b1) begin
+                                if(localMemAddrOut[39:32] == 8'hF) begin
+                                    localMemAddrOut[39:32] <= 8'h0;
+                                end
+                                else begin
+                                    localMemAddrOut[39:32] <= localMemAddrOut[39:32] + 1;
+                                end
+                            end
+                        end
+                        swState[0] <= sw[0];
+
+                        //Incrementer for LED1
+                        if(swState[1] == 1'b0) begin  
+                            if(sw[1] == 1'b1) begin
+                                if(localMemAddrOut[47:40] == 8'hF) begin
+                                    localMemAddrOut[47:40] <= 8'h0;
+                                end
+                                else begin
+                                    localMemAddrOut[47:40] <= localMemAddrOut[47:40] + 1;
+                                end
+                            end
+                        end
+                        swState[1] <= sw[1];
+
+                        //Incrementer for LED2
+                        if(swState[2] == 1'b0) begin  
+                            if(sw[2] == 1'b1) begin
+                                if(localMemAddrOut[55:48] == 8'hF) begin
+                                    localMemAddrOut[55:48] <= 8'h0;
+                                end
+                                else begin
+                                    localMemAddrOut[55:48] <= localMemAddrOut[55:48] + 1;
+                                end
+                            end
+                        end
+                        swState[2] <= sw[2];
+
+                        //Incrementer for LED3
+                        if(swState[3] == 1'b0) begin  
+                            if(sw[3] == 1'b1) begin
+                                if(localMemAddrOut[63:56] == 8'hF) begin
+                                    localMemAddrOut[63:56] <= 8'h0;
+                                end
+                                else begin
+                                    localMemAddrOut[63:56] <= localMemAddrOut[63:56] + 1;
+                                end
+                            end
+                        end
+                        swState[3] <= sw[3];
+                    end
+                    1'b11 : begin   //Get the data to write to said address.
+                        //Incrementer for LED0
+                        if(swState[0] == 1'b0) begin  
+                            if(sw[0] == 1'b1) begin
+                                if(localIoDataOut[7:0] == 8'hF) begin
+                                    localIoDataOut[7:0] <= 8'h0;
+                                end
+                                else begin
+                                    localIoDataOut[7:0] <= localIoDataOut[7:0] + 1;
+                                end
+                            end
+                        end
+                        swState[0] <= sw[0];
+
+                        //Incrementer for LED1
+                        if(swState[1] == 1'b0) begin  
+                            if(sw[1] == 1'b1) begin
+                                if(localIoDataOut[15:8] == 8'hF) begin
+                                    localIoDataOut[15:8] <= 8'h0;
+                                end
+                                else begin
+                                    localIoDataOut[15:8] <= localIoDataOut[15:8] + 1;
+                                end
+                            end
+                        end
+                        swState[1] <= sw[1];
+
+                        //Incrementer for LED2
+                        if(swState[2] == 1'b0) begin  
+                            if(sw[2] == 1'b1) begin
+                                if(localIoDataOut[23:16] == 8'hF) begin
+                                    localIoDataOut[23:16] <= 8'h0;
+                                end
+                                else begin
+                                    localIoDataOut[23:16] <= localIoDataOut[23:16] + 1;
+                                end
+                            end
+                        end
+                        swState[2] <= sw[2];
+                        //Incrementer for LED3
+                        if(swState[3] == 1'b0) begin  
+                            if(sw[3] == 1'b1) begin
+                                if(localIoDataOut[31:24] == 8'hF) begin
+                                    localIoDataOut[31:24] <= 8'h0;
+                                end
+                                else begin
+                                    localIoDataOut[31:24] <= localIoDataOut[31:24] + 1;
+                                end
+                            end
+                        end
+                        swState[3] <= sw[3];
+                    end
+                    2'b10 : begin
+                        cmdLvl <= cmdLvl + 1;
+                        if(cmdLvl == 2'b11)begin //Once command level is incremented past 3, then the memory module takes over and 
+                            localIoCmdDoneOut <= 1'b1;
+                            cmdLvl <= 2'b00;
+                            canChangeCmd <= 1'b1;
+                        end
+                    end
+                endcase
+                //********************************CODE FOR writeCmd*************************************************************
+                //**************************************************************************************************************
+                //**************************************************************************************************************
             end
             2'b10 : begin
                 readCmd(cmdLvl,sw,button);
             end
             default : begin
-                cmdReset();
+                //Default statement executes cmdReset()
+                cmdLvl <= 2'b00; 
+                //dispData <= idklol
+                localIoDataOut <= 16'h0000;
+                localMemCmd <= 2'b11;
+                currentCmd <= 2'b00;
             end
         endcase
     end
-    
 end
     //Assign Outputs
     assign memCmd = localMemCmd;
