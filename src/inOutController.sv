@@ -8,9 +8,9 @@ module inOutControl (
     output  [1:0]   modeOutput, //hex
     output  [1:0]   stageLevel, // hex
     output  [24:0]  memoryAddress, // memory
-    output  [15:0]  ioDataOut // memory
-    output  [15:0]  displayData //hex
-    output          ioDone,     //ioDone
+    output  [15:0]  ioDataOut, // memory
+    output  [15:0]  displayData, //hex
+    output          ioDone     //ioDone
 
 );
 
