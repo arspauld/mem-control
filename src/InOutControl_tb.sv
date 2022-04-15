@@ -15,6 +15,13 @@ module InOutControl_tb;
     reg ioCmdDoneOut;     
     reg [31:0] dispData;
 
+
+
+
+
+
+
+
 //INPUT OUTPUT DESCRIPTIONS ***********************
     // input clk,              //clk input
     // input [1:0] button,     //post-debounced button input sent from debouncing module
@@ -32,26 +39,36 @@ module InOutControl_tb;
    
 //Test For clearCmd ********************************
     // initial begin
-    //     memCmdDoneIn<=1'b1;
-    //     button <= 2'b10;
+    //     memCmdDoneIn<=1'b1;        
     //     sw <= 4'b0000;
+    //     #5 button <=2'b00; 
+    //     #5 button <=2'b10; 
+    //     #5 button <=2'b00; 
+
     // end
+
+    // always begin
+    //     #delay clk=~clk;
+    // end 
+
     // always @(memAddrOut) begin
     //         memCmdDoneIn <= 1'b0 ;
     //         #10 memCmdDoneIn <= 1'b1 ;
     // end
 
-    // always begin
-    //     #delay clk=~clk;
-    //     button <=2'b00;
-    // end
 //Test For clearCmd ********************************
 
 //Test For writeCmd ********************************
+
     initial begin
         memCmdDoneIn<=1'b1;
         button <= 2'b00;
         sw <= 4'b0000;
+
+        #5 button <= 2'b11; //INITIAL CMD RESET
+        #5 button <= 2'b00; //Set button is unpressed
+
+
         #5 button <=2'b01; //Cycle to writeCmd after 1 cc
         #5 button <=2'b10; //Initiate writeCmd after 1 cc
                             //Get LSBs stage
@@ -115,17 +132,22 @@ module InOutControl_tb;
         #10 sw <= 4'b0000;
         #10 sw <= 4'b1000;
                          
+        #5 button <=2'b10; //End writeCmd
+                            //Send data to memControl to write
+                            //cmdLvl should be 0
+        #5 button <=2'b00; //Set button is unpressed
+
         memCmdDoneIn <= 1'b0;
+
         //42 #10s, Run 4300ns to capture whole test in one sim.
     end
-
+   
     always begin
         #delay clk=~clk;
     end
 
-//Test For writeCmd ********************************
 
-
+// Test For writeCmd ********************************
 
     InOutControl uut(
         .clk(clk),
@@ -139,5 +161,18 @@ module InOutControl_tb;
         .ioCmdDoneOut(ioCmdDoneOut),
         .dispData(dispData)
     );
+
+    // InOutControl2 uut(
+    //     .clk(clk),
+    //     .button(button),
+    //     .sw(sw),
+    //     .input(inOutEn),
+    //     .input(dataIn),
+
+    //     .addrIncEn(addrIncEn),
+    //     .clearEn(clearEn)
+    // );
+
+
 
 endmodule
