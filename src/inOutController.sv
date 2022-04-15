@@ -18,7 +18,7 @@ logic [3:0]     state;
 logic [1:0]     localModeOutput;
 logic [1:0]     localStageLevel;
 logic [15:0]    localDisplayData;
-logic [24:0]    localMemoryAddress;
+logic [24:0]    localMemAddr;
 logic [15:0]    localIoDataOut;
 logic           localIoDone;
 
@@ -35,6 +35,25 @@ localparam [3:0] WRITELEVEL_3 = 4'b0101;
 localparam [3:0] READLEVEL_1 = 4'b0000;
 localparam [3:0] READLEVEL_2 = 4'b0000;
 localparam [3:0] READLEVEL_3 = 4'b0000;
+
+//Local Memory Addresses
+logic [3:0] localMemAddrLSBSw0;
+logic [3:0] localMemAddrLSBSw1;
+logic [3:0] localMemAddrLSBSw2;
+logic [3:0] localMemAddrLSBSw3;
+
+logic [3:0] localMemAddrMSBSw0;
+logic [3:0] localMemAddrMSBSw1;
+logic       localMemAddrMSBSw2;
+
+logic [3:0] localIoDataOutSw0;
+logic [3:0] localIoDataOutSw1;
+logic [3:0] localIoDataOutSw2;
+logic [3:0] localIoDataOutSw3;
+
+
+
+
 
 
 
@@ -78,7 +97,7 @@ always@(posedge clk) begin
                 end
                 else begin
                     state <= WRITELEVEL_1;
-                    localDisplayData <= localMemoryAddress[15:0];
+                    localDisplayData <= {localMemAddrLSBSw3,localMemAddrLSBSw2,localMemAddrLSBSw1,localMemAddrLSBSw0};
                 end
             end
 
@@ -89,20 +108,19 @@ always@(posedge clk) begin
                 end
                 else begin
                     state <= WRITELEVEL_2;
-                    localDisplayData <= {7'b0, localMemoryAddress[24:16]};
+                    localDisplayData <= {7'b0,localMemAddrMSBSw2,localMemAddrMSBSw1,localMemAddrMSBSw0};
                 end
             end
 
             WRITELEVEL_3 : begin
                 if(key1 == 1'b1) begin
-                    state <= IDLE;
                     localStageLevel <= 2'b00;
                     localModeOutput <= 2'b11;
                     localIoDone <= 1'b1;
                 end
                 else begin
                     state <= WRITELEVEL_3;
-                    localDisplayData <= localIoDataOut;
+                    localDisplayData <= {localIoDataOutSw3,localIoDataOutSw2,localIoDataOutSw1,localIoDataOutSw0};
                 end
             end
 
@@ -133,8 +151,20 @@ always@(posedge clk) begin
                     localModeOutput <= 2'b11;
                 end
 
-                localMemoryAddress <= 25'b0;
-                localIoDataOut <= 16'b0;
+                localMemAddrLSBSw0 <= 4'b0;
+                localMemAddrLSBSw1 <= 4'b0;
+                localMemAddrLSBSw2 <= 4'b0;
+                localMemAddrLSBSw3 <= 4'b0;
+
+                localMemAddrMSBSw0 <= 4'b0;
+                localMemAddrMSBSw1 <= 4'b0;
+                localMemAddrMSBSw2 <= 4'b0;
+
+                localIoDataOutSw0 <= 4'b0;
+                localIoDataOutSw1 <= 4'b0;
+                localIoDataOutSw2 <= 4'b0;
+                localIoDataOutSw3 <= 4'b0;
+
                 localStageLevel <= 2'b00;
                 localIoDone <= 1'b0;
             end
@@ -149,27 +179,27 @@ end
 always @(posedge sw[0]) begin
     case(state)
         (WRITELEVEL_1 || READLEVEL_1) : begin
-            if(localMemoryAddress[3:0] == 4'hF) begin
-                localMemoryAddress[3:0] <= 4'h0;
+            if(localMemAddrLSBSw0 == 4'hF) begin
+                localMemAddrLSBSw0 <= 4'h0;
             end
             else begin
-                localMemoryAddress[3:0] <= localMemoryAddress[3:0] + 1'b1;
+                localMemAddrLSBSw0 <= localMemAddrLSBSw0 + 1'b1;
             end
         end
         (WRITELEVEL_2 || READLEVEL_2) : begin
-            if(localMemoryAddress[19:16] == 4'hF) begin
-                localMemoryAddress[19:16] <= 4'h0;
+            if(localMemAddrMSBSw0 == 4'hF) begin
+                localMemAddrMSBSw0 <= 4'h0;
             end
             else begin
-                localMemoryAddress[19:16] <= localMemoryAddress[19:16] + 1'b1;
+                localMemAddrMSBSw0 <= localMemAddrMSBSw0 + 1'b1;
             end
         end
         WRITELEVEL_3 : begin
-            if(localIoDataOut[3:0] == 4'hF) begin
-                localIoDataOut[3:0] <= 4'h0;
+            if(localIoDataOutSw0 == 4'hF) begin
+                localIoDataOutSw0 <= 4'h0;
             end
             else begin
-                localIoDataOut[3:0] <= localMemoryAddress[3:0] + 1'b1;
+                localIoDataOutSw0 <= localIoDataOutSw0 + 1'b1;
             end
         end
         default : begin
@@ -180,27 +210,27 @@ end
 always @(posedge sw[1]) begin
     case(state)
         (WRITELEVEL_1 || READLEVEL_1) : begin
-            if(localMemoryAddress[7:4] == 4'hF) begin
-                localMemoryAddress[7:4] <= 4'h0;
+            if(localMemAddrLSBSw1 == 4'hF) begin
+                localMemAddrLSBSw1 <= 4'h0;
             end
             else begin
-                localMemoryAddress[7:4] <= localMemoryAddress[7:4] + 1'b1;
+                localMemAddrLSBSw1 <= localMemAddrLSBSw1 + 1'b1;
             end
         end
         (WRITELEVEL_2 || READLEVEL_2) : begin
-            if(localMemoryAddress[23:20] == 4'hF) begin
-                localMemoryAddress[23:20] <= 4'h0;
+            if(localMemAddrMSBSw1 == 4'hF) begin
+                localMemAddrMSBSw1 <= 4'h0;
             end
             else begin
-                localMemoryAddress[23:20] <= localMemoryAddress[23:0] + 1'b1;
+                localMemAddrMSBSw1 <= localMemAddrMSBSw1 + 1'b1;
             end
         end
         WRITELEVEL_3 : begin
-            if(localIoDataOut[7:4] == 4'hF) begin
-                localIoDataOut[7:4] <= 4'h0;
+            if(localIoDataOutSw1 == 4'hF) begin
+                localIoDataOutSw1 <= 4'h0;
             end
             else begin
-                localIoDataOut[7:4] <= localMemoryAddress[7:4] + 1'b1;
+                localIoDataOutSw1 <= localIoDataOutSw1 + 1'b1;
             end
         end
         default : begin
@@ -211,27 +241,27 @@ end
 always @(posedge sw[2]) begin
     case(state)
         (WRITELEVEL_1 || READLEVEL_1) : begin
-            if(localMemoryAddress[11:8] == 4'hF) begin
-                localMemoryAddress[11:8] <= 4'h0;
+            if(localMemAddrLSBSw2 == 4'hF) begin
+                localMemAddrLSBSw2 <= 4'h0;
             end
             else begin
-                localMemoryAddress[11:8] <= localMemoryAddress[11:8] + 1'b1;
+                localMemAddrLSBSw2 <= localMemAddrLSBSw2 + 1'b1;
             end
         end
         (WRITELEVEL_2 || READLEVEL_2) : begin
-            if(localMemoryAddress[24] == 1'b1) begin
-                localMemoryAddress[24] <= 1'b0;
+            if(localMemAddrMSBSw2 == 1'b1) begin
+                localMemAddrMSBSw2 <= 1'b0;
             end
             else begin
-                localMemoryAddress[24] <= localMemoryAddress[24] + 1'b1;
+                localMemAddrMSBSw2 <= localMemAddrMSBSw2 + 1'b1;
             end
         end
         WRITELEVEL_3 : begin
-            if(localIoDataOut[11:8] == 4'hF) begin
-                localIoDataOut[11:8] <= 4'h0;
+            if(localIoDataOutSw2 == 4'hF) begin
+                localIoDataOutSw2 <= 4'h0;
             end
             else begin
-                localIoDataOut[11:8] <= localMemoryAddress[11:8] + 1'b1;
+                localIoDataOutSw2 <= localIoDataOutSw2 + 1'b1;
             end
         end
         default : begin
@@ -242,19 +272,19 @@ end
 always @(posedge sw[3]) begin
     case(state)
         (WRITELEVEL_1 || READLEVEL_1) : begin
-            if(localMemoryAddress[15:12] == 4'hF) begin
-                localMemoryAddress[15:12] <= 4'h0;
+            if(localMemAddrLSBSw3 == 4'hF) begin
+                localMemAddrLSBSw3 <= 4'h0;
             end
             else begin
-                localMemoryAddress[15:12] <= localMemoryAddress[15:12] + 1'b1;
+                localMemAddrLSBSw3 <= localMemAddrLSBSw3 + 1'b1;
             end
         end
         WRITELEVEL_3 : begin
-            if(localIoDataOut[15:12] == 4'hF) begin
-                localIoDataOut[15:12] <= 4'h0;
+            if(localIoDataOutSw3 == 4'hF) begin
+                localIoDataOutSw3 <= 4'h0;
             end
             else begin
-                localIoDataOut[15:12] <= localMemoryAddress[15:12] + 1'b1;
+                localIoDataOutSw3 <= localIoDataOutSw3 + 1'b1;
             end
         end
         default : begin
@@ -265,8 +295,8 @@ end
 //assign signals
 assign modeOutput = localModeOutput;
 assign stageLevel = localStageLevel;
-assign memoryAddress = localMemoryAddress;
-assign ioDataOut = localIoDataOut;
+assign memoryAddress = {localMemAddrMSBSw2,localMemAddrMSBSw1,localMemAddrMSBSw0,localMemAddrLSBSw3,localMemAddrLSBSw2,localMemAddrLSBSw1,localMemAddrLSBSw0};
+assign ioDataOut = {localIoDataOutSw3,localIoDataOutSw2,localIoDataOutSw1,localIoDataOutSw0};
 assign displayData = localDisplayData;
 assign ioDone = localIoDone;
 
