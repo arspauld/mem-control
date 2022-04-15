@@ -34,8 +34,8 @@ logic [24:0] localMemAddrOut;
 // end
 
 always@(posedge memCmdDoneIn) begin
-    localMemAddrOut = 32'h00000000;
-    localIoDataOut = 16'h0000;
+    localMemAddrOut <= 32'h00000000;
+    localIoDataOut <= 16'h0000;
     localIoCmdDoneOut <= 1'b0;
     if(cmdLvl != 2'b00) begin
         canChangeCmd <= 1'b1;
@@ -58,7 +58,7 @@ always @(posedge clk) begin         //ALWAYS @ POSEDGE CLK
             2'b11 : begin  //CMD RESET
                     cmdLvl <= 2'b00; //Sets the level of the command to 0 (i.e. select instruction level)
                     localIoDataOut <= 16'h0000;
-                    localMemAddrOut = 32'h00000000;
+                    localMemAddrOut <= 32'h00000000;
                     localIoCmdDoneOut <= 1'b0;
                     localMemCmd <= 2'b11;
                     currentCmd <= 2'b00; //Sets the current command to clear
@@ -124,122 +124,6 @@ always @(posedge clk) begin         //ALWAYS @ POSEDGE CLK
 
                 end
                 2'b10 : begin   //EXECUTE READ CMD (INCOMPLETE)
-                    // case(cmdLvl)
-                    //     2'b01 : begin  //Get the 4 LSB of the read address
-                    //         //Incrementer for LED0
-                    //         if(swState[0] == 1'b0) begin  
-                    //             if(sw[0] == 1'b1) begin
-                    //                 if(localMemAddrOut[7:0] == 8'hF) begin
-                    //                     localMemAddrOut[7:0] <= 8'h0;
-                    //                 end
-                    //                 else begin
-                    //                     localMemAddrOut[7:0] <= localMemAddrOut[7:0] + 1;
-                    //                 end
-                    //             end
-                    //         end
-                    //         swState[0] <= sw[0];
-
-                    //         //Incrementer for LED1
-                    //         if(swState[1] == 1'b0) begin  
-                    //             if(sw[1] == 1'b1) begin
-                    //                 if(localMemAddrOut[15:8] == 8'hF) begin
-                    //                     localMemAddrOut[15:8] <= 8'h0;
-                    //                 end
-                    //                 else begin
-                    //                     localMemAddrOut[15:8] <= localMemAddrOut[15:8] + 1;
-                    //                 end
-                    //             end
-                    //         end
-                    //         swState[1] <= sw[1];
-
-                    //         //Incrementer for LED2
-                    //         if(swState[2] == 1'b0) begin  
-                    //             if(sw[2] == 1'b1) begin
-                    //                 if(localMemAddrOut[23:16] == 8'hF) begin
-                    //                     localMemAddrOut[23:16] <= 8'h0;
-                    //                 end
-                    //                 else begin
-                    //                     localMemAddrOut[23:16] <= localMemAddrOut[23:16] + 1;
-                    //                 end
-                    //             end
-                    //         end
-                    //         swState[2] <= sw[2];
-
-                    //         //Incrementer for LED2
-                    //         if(swState[3] == 1'b0) begin  
-                    //             if(sw[3] == 1'b1) begin
-                    //                 if(localMemAddrOut[31:24] == 8'hF) begin
-                    //                     localMemAddrOut[31:24] <= 8'h0;
-                    //                 end
-                    //                 else begin
-                    //                     localMemAddrOut[31:24] <= localMemAddrOut[31:24] + 1;
-                    //                 end
-                    //             end
-                    //         end
-                    //         swState[3] <= sw[3];
-                    //     end
-                    //     2'b10 : begin //Get the 4 MSB of the write address
-                    //         if(swState[0] == 1'b0) begin  
-                    //             if(sw[0] == 1'b1) begin
-                    //                 if(localMemAddrOut[39:32] == 8'hF) begin
-                    //                     localMemAddrOut[39:32] <= 8'h0;
-                    //                 end
-                    //                 else begin
-                    //                     localMemAddrOut[39:32] <= localMemAddrOut[39:32] + 1;
-                    //                 end
-                    //             end
-                    //         end
-                    //         swState[0] <= sw[0];
-
-                    //         //Incrementer for LED1
-                    //         if(swState[1] == 1'b0) begin  
-                    //             if(sw[1] == 1'b1) begin
-                    //                 if(localMemAddrOut[47:40] == 8'hF) begin
-                    //                     localMemAddrOut[47:40] <= 8'h0;
-                    //                 end
-                    //                 else begin
-                    //                     localMemAddrOut[47:40] <= localMemAddrOut[47:40] + 1;
-                    //                 end
-                    //             end
-                    //         end
-                    //         swState[1] <= sw[1];
-
-                    //         //Incrementer for LED2
-                    //         if(swState[2] == 1'b0) begin  
-                    //             if(sw[2] == 1'b1) begin
-                    //                 if(localMemAddrOut[55:48] == 8'hF) begin
-                    //                     localMemAddrOut[55:48] <= 8'h0;
-                    //                 end
-                    //                 else begin
-                    //                     localMemAddrOut[55:48] <= localMemAddrOut[55:48] + 1;
-                    //                 end
-                    //             end
-                    //         end
-                    //         swState[2] <= sw[2];
-
-                    //         //Incrementer for LED2
-                    //         if(swState[3] == 1'b0) begin  
-                    //             if(sw[3] == 1'b1) begin
-                    //                 if(localMemAddrOut[63:56] == 8'hF) begin
-                    //                     localMemAddrOut[63:56] <= 8'h0;
-                    //                 end
-                    //                 else begin
-                    //                     localMemAddrOut[63:56] <= localMemAddrOut[63:56] + 1;
-                    //                 end
-                    //             end
-                    //         end
-                    //         swState[3] <= sw[3];
-                    //     end
-                    //     2'b11 : begin   //Get the data from address specified in command level 1 and 2
-                    //         cmdLvl <= cmdLvl + 1;
-                    //         if(cmdLvl == 2'b11) begin//Once command level is incremented past 3, then the memory module takes over and 
-                    //             localIoCmdDoneOut <= 1'b1;
-                    //             cmdLvl <= 2'b00;
-                    //         end
-                    //     end
-                    //     default : begin
-                    //     end
-                    // endcase
                 end
                 default : begin //CMD RESET
                     cmdLvl <= 2'b00;
@@ -252,6 +136,7 @@ always @(posedge clk) begin         //ALWAYS @ POSEDGE CLK
         end
     end
 end
+
 always @(posedge sw[0])begin    //INCREMENTOR FOR LED 0
     if(memCmdDoneIn == 1'b1) begin
         case(currentCmd)
@@ -279,6 +164,28 @@ always @(posedge sw[0])begin    //INCREMENTOR FOR LED 0
                         end
                         else begin
                             localIoDataOut[3:0]++;
+                        end
+                    end
+                    default : begin
+                    end
+                endcase
+            end
+            2'b10 : begin//READ CMD
+                case(cmdLvl)
+                    2'b01 : begin  
+                        if(localMemAddrOut[3:0] == 4'hF) begin
+                            localMemAddrOut[3:0] <= 4'h0;
+                        end
+                        else begin
+                            localMemAddrOut[3:0]++;
+                        end
+                    end
+                    2'b10 : begin  
+                        if(localMemAddrOut[19:16] == 4'hF) begin
+                            localMemAddrOut[19:16] <= 4'h0;
+                        end
+                        else begin
+                            localMemAddrOut[19:16]++;
                         end
                     end
                     default : begin
@@ -324,6 +231,28 @@ always @(posedge sw[1])begin    //INCREMENTOR FOR LED 0
                     end
                 endcase
             end
+            2'b10 : begin //READ CMD
+                case(cmdLvl)
+                    2'b01 : begin  //Get the 4 LSB of the write address
+                        if(localMemAddrOut[7:4] == 4'hF) begin
+                            localMemAddrOut[7:4] <= 4'h0;
+                        end
+                        else begin
+                            localMemAddrOut[7:4]++;
+                        end
+                    end
+                    2'b10 : begin //Get the 4 MSB of the write address
+                        if(localMemAddrOut[23:20] == 4'hF) begin
+                            localMemAddrOut[23:20] <= 4'h0;
+                        end
+                        else begin
+                            localMemAddrOut[23:20]++;
+                        end
+                    end
+                    default : begin
+                    end
+                endcase
+            end
             default : begin
             end
         endcase
@@ -363,6 +292,28 @@ always @(posedge sw[2])begin    //INCREMENTOR FOR LED 0
                     end
                 endcase
             end
+            2'b10 : begin //READ CMD
+                case(cmdLvl)
+                    2'b01 : begin  //Get the 4 LSB of the write address
+                        if(localMemAddrOut[11:8] == 4'hF) begin
+                            localMemAddrOut[11:8] <= 4'h0;
+                        end
+                        else begin
+                            localMemAddrOut[11:8]++;
+                        end
+                    end
+                    2'b10 : begin //Get the 4 MSB of the write address
+                        if(localMemAddrOut[24] == 1'b1) begin
+                            localMemAddrOut[24] <= 1'b0;
+                        end
+                        else begin
+                            localMemAddrOut[24]++;
+                        end
+                    end
+                    default : begin
+                    end
+                endcase
+            end
             default : begin
             end
         endcase
@@ -396,12 +347,27 @@ always @(posedge sw[3])begin    //INCREMENTOR FOR LED 0
                     end
                 endcase
             end
+            2'b10 : begin //READ CMD
+                case(cmdLvl)
+                    2'b01 : begin  //Get the 4 LSB of the write address
+                        if(localMemAddrOut[15:12] == 4'hF) begin
+                            localMemAddrOut[15:12] <= 4'h0;
+                        end
+                        else begin
+                            localMemAddrOut[15:12]++;
+                        end
+                    end
+                    2'b10 : begin 
+                    end
+                    default : begin
+                    end
+                endcase
+            end
             default : begin
             end
         endcase
     end
 end
-
 
     //ASSIGN OUTPUTS
     assign memCmd = localMemCmd;
