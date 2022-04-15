@@ -18,7 +18,7 @@ logic [1:0] currentCmd;
 logic [3:0] swState;
 
 logic localDone;
-logic canChangeCmd;
+//logic canChangeCmd;
 logic localMemCmd;
 logic localIoCmdDoneOut;
 logic [15:0] localIoDataOut;
@@ -28,7 +28,7 @@ logic [24:0] localMemAddrOut;
 // initial begin
 //     nextAddr = 32'h00000000;
 //     localDone = 1'b0;
-//     canChangeCmd = 1'b1;
+//     //canChangeCmd = 1'b1;
 //     localMemAddrOut = 32'h00000000;
 //     localIoDataOut = 16'h0000;
 // end
@@ -38,7 +38,7 @@ always@(posedge memCmdDoneIn) begin
     localIoDataOut <= 16'h0000;
     localIoCmdDoneOut <= 1'b0;
     if(cmdLvl != 2'b00) begin
-        canChangeCmd <= 1'b1;
+        //canChangeCmd <= 1'b1;
     end
     
 end
@@ -50,8 +50,8 @@ always @(posedge clk) begin         //ALWAYS @ POSEDGE CLK
     // if(currentCmd === 2'bxx) begin
     //     currentCmd <= 2'b00;
     // end
-    // if(canChangeCmd === 1'bx) begin
-    //     canChangeCmd <= 1'b1;
+    // if(//canChangeCmd === 1'bx) begin
+    //     //canChangeCmd <= 1'b1;
     // end 
     if(memCmdDoneIn == 1'b1) begin
         case(button) 
@@ -62,12 +62,12 @@ always @(posedge clk) begin         //ALWAYS @ POSEDGE CLK
                     localIoCmdDoneOut <= 1'b0;
                     localMemCmd <= 2'b11;
                     currentCmd <= 2'b00; //Sets the current command to clear
-                    canChangeCmd <= 1'b1;
+                    //canChangeCmd <= 1'b1;
             end
             2'b10 : begin //EXECUTE CMD
                 if(currentCmd == 2'b00) begin //Initiate Clear
                     cmdLvl <= cmdLvl + 1;
-                    canChangeCmd <= 1'b0;
+                    //canChangeCmd <= 1'b0;
                 end
                 else if(currentCmd == 2'b01) begin //Initiate Write
                     if(cmdLvl == 2'b11) begin
@@ -76,22 +76,22 @@ always @(posedge clk) begin         //ALWAYS @ POSEDGE CLK
                         localIoCmdDoneOut <= 1'b1;
                     end
                     cmdLvl <= cmdLvl + 1;
-                    canChangeCmd <= 1'b0;
+                    //canChangeCmd <= 1'b0;
 
                 end
                 else if(currentCmd == 2'b10) begin//Initiate Read
                     cmdLvl <= cmdLvl + 1;
-                    canChangeCmd <= 1'b0;
+                    //canChangeCmd <= 1'b0;
                 end
                 // else begin    //DEFAULT CMD RESET
                 //     cmdLvl <= 2'b00; //Sets the level of the command to 0 (i.e. select instruction level)
                 //     localMemCmd <= 2'b11;
                 //     currentCmd <= 2'b00; //Sets the current command to clear
-                //     canChangeCmd <= 1'b1;
+                //     //canChangeCmd <= 1'b1;
                 // end
             end
             2'b01: begin    //CYCLE TO NEXT CMD
-                if(canChangeCmd == 2'b1) begin
+//                if(//canChangeCmd == 2'b1) begin
                     if(currentCmd == 2'b10 || currentCmd == 2'b11) begin
                         currentCmd <= 2'b00;
                     end 
@@ -114,7 +114,7 @@ always @(posedge clk) begin         //ALWAYS @ POSEDGE CLK
 
                     if(nextAddr == 24'hFFFFFF) begin
                         nextAddr <= 24'h000000;
-                        canChangeCmd <= 1'b1;
+                        //canChangeCmd <= 1'b1;
                         cmdLvl <= 2'b00;
                     end 
                     nextAddr++;
@@ -130,7 +130,7 @@ always @(posedge clk) begin         //ALWAYS @ POSEDGE CLK
                     localIoDataOut <= 16'h0000;
                     localMemCmd <= 2'b11;
                     currentCmd <= 2'b00;
-                    canChangeCmd <= 1'b1;
+                    //canChangeCmd <= 1'b1;
                 end
             endcase
         end
