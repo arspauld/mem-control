@@ -2,7 +2,7 @@ module inOutControl (
     input           clk,
     input           key0,
     input           key1,
-    input   [3:0]   sw,
+    input   [4:0]   sw,
     input           memDone,
 
     output  [1:0]   modeOutput, //hex
@@ -50,12 +50,6 @@ logic [3:0] localIoDataOutSw0;
 logic [3:0] localIoDataOutSw1;
 logic [3:0] localIoDataOutSw2;
 logic [3:0] localIoDataOutSw3;
-
-
-
-
-
-
 
 
 always@(posedge clk) begin
@@ -150,25 +144,8 @@ always@(posedge clk) begin
                 else begin
                     localModeOutput <= 2'b11;
                 end
-
                 state <= IDLE;
 
-                localMemAddrLSBSw0 <= 4'b0;
-                localMemAddrLSBSw1 <= 4'b0;
-                localMemAddrLSBSw2 <= 4'b0;
-                localMemAddrLSBSw3 <= 4'b0;
-
-                localMemAddrMSBSw0 <= 4'b0;
-                localMemAddrMSBSw1 <= 4'b0;
-                localMemAddrMSBSw2 <= 4'b0;
-
-                localIoDataOutSw0 <= 4'b0;
-                localIoDataOutSw1 <= 4'b0;
-                localIoDataOutSw2 <= 4'b0;
-                localIoDataOutSw3 <= 4'b0;
-
-                localStageLevel <= 2'b00;
-                localIoDone <= 1'b0;
             end
         endcase
     end
@@ -177,123 +154,141 @@ always@(posedge clk) begin
     end
 end
 
-if(state != IDLE) begin
-    always @(posedge sw[0]) begin
-        case(state)
-            (WRITELEVEL_1 || READLEVEL_1) : begin
-                if(localMemAddrLSBSw0 == 4'hF) begin
-                    localMemAddrLSBSw0 <= 4'h0;
-                end
-                else begin
-                    localMemAddrLSBSw0 <= localMemAddrLSBSw0 + 1'b1;
-                end
+always @(posedge sw[0]) begin
+    case(state)
+        (WRITELEVEL_1 || READLEVEL_1) : begin
+            if(localMemAddrLSBSw0 == 4'hF) begin
+                localMemAddrLSBSw0 <= 4'h0;
             end
-            (WRITELEVEL_2 || READLEVEL_2) : begin
-                if(localMemAddrMSBSw0 == 4'hF) begin
-                    localMemAddrMSBSw0 <= 4'h0;
-                end
-                else begin
-                    localMemAddrMSBSw0 <= localMemAddrMSBSw0 + 1'b1;
-                end
+            else begin
+                localMemAddrLSBSw0 <= localMemAddrLSBSw0 + 1'b1;
             end
-            WRITELEVEL_3 : begin
-                if(localIoDataOutSw0 == 4'hF) begin
-                    localIoDataOutSw0 <= 4'h0;
-                end
-                else begin
-                    localIoDataOutSw0 <= localIoDataOutSw0 + 1'b1;
-                end
+        end
+        (WRITELEVEL_2 || READLEVEL_2) : begin
+            if(localMemAddrMSBSw0 == 4'hF) begin
+                localMemAddrMSBSw0 <= 4'h0;
             end
-            default : begin
+            else begin
+                localMemAddrMSBSw0 <= localMemAddrMSBSw0 + 1'b1;
             end
-        endcase
-    end
-
-    always @(posedge sw[1]) begin
-        case(state)
-            (WRITELEVEL_1 || READLEVEL_1) : begin
-                if(localMemAddrLSBSw1 == 4'hF) begin
-                    localMemAddrLSBSw1 <= 4'h0;
-                end
-                else begin
-                    localMemAddrLSBSw1 <= localMemAddrLSBSw1 + 1'b1;
-                end
+        end
+        WRITELEVEL_3 : begin
+            if(localIoDataOutSw0 == 4'hF) begin
+                localIoDataOutSw0 <= 4'h0;
             end
-            (WRITELEVEL_2 || READLEVEL_2) : begin
-                if(localMemAddrMSBSw1 == 4'hF) begin
-                    localMemAddrMSBSw1 <= 4'h0;
-                end
-                else begin
-                    localMemAddrMSBSw1 <= localMemAddrMSBSw1 + 1'b1;
-                end
+            else begin
+                localIoDataOutSw0 <= localIoDataOutSw0 + 1'b1;
             end
-            WRITELEVEL_3 : begin
-                if(localIoDataOutSw1 == 4'hF) begin
-                    localIoDataOutSw1 <= 4'h0;
-                end
-                else begin
-                    localIoDataOutSw1 <= localIoDataOutSw1 + 1'b1;
-                end
-            end
-            default : begin
-            end
-        endcase
-    end
-
-    always @(posedge sw[2]) begin
-        case(state)
-            (WRITELEVEL_1 || READLEVEL_1) : begin
-                if(localMemAddrLSBSw2 == 4'hF) begin
-                    localMemAddrLSBSw2 <= 4'h0;
-                end
-                else begin
-                    localMemAddrLSBSw2 <= localMemAddrLSBSw2 + 1'b1;
-                end
-            end
-            (WRITELEVEL_2 || READLEVEL_2) : begin
-                if(localMemAddrMSBSw2 == 1'b1) begin
-                    localMemAddrMSBSw2 <= 1'b0;
-                end
-                else begin
-                    localMemAddrMSBSw2 <= localMemAddrMSBSw2 + 1'b1;
-                end
-            end
-            WRITELEVEL_3 : begin
-                if(localIoDataOutSw2 == 4'hF) begin
-                    localIoDataOutSw2 <= 4'h0;
-                end
-                else begin
-                    localIoDataOutSw2 <= localIoDataOutSw2 + 1'b1;
-                end
-            end
-            default : begin
-            end
-        endcase
-    end
-
-    always @(posedge sw[3]) begin
-        case(state)
-            (WRITELEVEL_1 || READLEVEL_1) : begin
-                if(localMemAddrLSBSw3 == 4'hF) begin
-                    localMemAddrLSBSw3 <= 4'h0;
-                end
-                else begin
-                    localMemAddrLSBSw3 <= localMemAddrLSBSw3 + 1'b1;
-                end
-            end
-            WRITELEVEL_3 : begin
-                if(localIoDataOutSw3 == 4'hF) begin
-                    localIoDataOutSw3 <= 4'h0;
-                end
-                else begin
-                    localIoDataOutSw3 <= localIoDataOutSw3 + 1'b1;
-                end
-            end
-            default : begin
-            end
-        endcase
-    end
+        end
+        default : begin
+        end
+    endcase
 end
+
+always @(posedge sw[1]) begin
+    case(state)
+        (WRITELEVEL_1 || READLEVEL_1) : begin
+            if(localMemAddrLSBSw1 == 4'hF) begin
+                localMemAddrLSBSw1 <= 4'h0;
+            end
+            else begin
+                localMemAddrLSBSw1 <= localMemAddrLSBSw1 + 1'b1;
+            end
+        end
+        (WRITELEVEL_2 || READLEVEL_2) : begin
+            if(localMemAddrMSBSw1 == 4'hF) begin
+                localMemAddrMSBSw1 <= 4'h0;
+            end
+            else begin
+                localMemAddrMSBSw1 <= localMemAddrMSBSw1 + 1'b1;
+            end
+        end
+        WRITELEVEL_3 : begin
+            if(localIoDataOutSw1 == 4'hF) begin
+                localIoDataOutSw1 <= 4'h0;
+            end
+            else begin
+                localIoDataOutSw1 <= localIoDataOutSw1 + 1'b1;
+            end
+        end
+        default : begin
+        end
+    endcase
+end
+
+always @(posedge sw[2]) begin
+    case(state)
+        (WRITELEVEL_1 || READLEVEL_1) : begin
+            if(localMemAddrLSBSw2 == 4'hF) begin
+                localMemAddrLSBSw2 <= 4'h0;
+            end
+            else begin
+                localMemAddrLSBSw2 <= localMemAddrLSBSw2 + 1'b1;
+            end
+        end
+        (WRITELEVEL_2 || READLEVEL_2) : begin
+            if(localMemAddrMSBSw2 == 1'b1) begin
+                localMemAddrMSBSw2 <= 1'b0;
+            end
+            else begin
+                localMemAddrMSBSw2 <= localMemAddrMSBSw2 + 1'b1;
+            end
+        end
+        WRITELEVEL_3 : begin
+            if(localIoDataOutSw2 == 4'hF) begin
+                localIoDataOutSw2 <= 4'h0;
+            end
+            else begin
+                localIoDataOutSw2 <= localIoDataOutSw2 + 1'b1;
+            end
+        end
+        default : begin
+        end
+    endcase
+end
+
+always @(posedge sw[3]) begin
+    case(state)
+        (WRITELEVEL_1 || READLEVEL_1) : begin
+            if(localMemAddrLSBSw3 == 4'hF) begin
+                localMemAddrLSBSw3 <= 4'h0;
+            end
+            else begin
+                localMemAddrLSBSw3 <= localMemAddrLSBSw3 + 1'b1;
+            end
+        end
+        WRITELEVEL_3 : begin
+            if(localIoDataOutSw3 == 4'hF) begin
+                localIoDataOutSw3 <= 4'h0;
+            end
+            else begin
+                localIoDataOutSw3 <= localIoDataOutSw3 + 1'b1;
+            end
+        end
+        default : begin
+        end
+    endcase
+end
+
+always @(posedge sw[4]) begin
+    localMemAddrLSBSw0 <= 4'b0;
+    localMemAddrLSBSw1 <= 4'b0;
+    localMemAddrLSBSw2 <= 4'b0;
+    localMemAddrLSBSw3 <= 4'b0;
+
+    localMemAddrMSBSw0 <= 4'b0;
+    localMemAddrMSBSw1 <= 4'b0;
+    localMemAddrMSBSw2 <= 4'b0;
+
+    localIoDataOutSw0 <= 4'b0;
+    localIoDataOutSw1 <= 4'b0;
+    localIoDataOutSw2 <= 4'b0;
+    localIoDataOutSw3 <= 4'b0;
+
+    localStageLevel <= 2'b00;
+    localIoDone <= 1'b0;
+end
+
 //assign signals
 assign modeOutput = localModeOutput;
 assign stageLevel = localStageLevel;
