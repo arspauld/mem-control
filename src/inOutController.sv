@@ -270,24 +270,24 @@ always @(posedge sw[3]) begin
     endcase
 end
 
-always @(posedge sw[4]) begin
-    localMemAddrLSBSw0 <= 4'b0;
-    localMemAddrLSBSw1 <= 4'b0;
-    localMemAddrLSBSw2 <= 4'b0;
-    localMemAddrLSBSw3 <= 4'b0;
+// always @(posedge sw[4]) begin
+//     localMemAddrLSBSw0 <= 4'b0;
+//     localMemAddrLSBSw1 <= 4'b0;
+//     localMemAddrLSBSw2 <= 4'b0;
+//     localMemAddrLSBSw3 <= 4'b0;
 
-    localMemAddrMSBSw0 <= 4'b0;
-    localMemAddrMSBSw1 <= 4'b0;
-    localMemAddrMSBSw2 <= 4'b0;
+//     localMemAddrMSBSw0 <= 4'b0;
+//     localMemAddrMSBSw1 <= 4'b0;
+//     localMemAddrMSBSw2 <= 4'b0;
 
-    localIoDataOutSw0 <= 4'b0;
-    localIoDataOutSw1 <= 4'b0;
-    localIoDataOutSw2 <= 4'b0;
-    localIoDataOutSw3 <= 4'b0;
+//     localIoDataOutSw0 <= 4'b0;
+//     localIoDataOutSw1 <= 4'b0;
+//     localIoDataOutSw2 <= 4'b0;
+//     localIoDataOutSw3 <= 4'b0;
 
-    localStageLevel <= 2'b00;
-    localIoDone <= 1'b0;
-end
+//     localStageLevel <= 2'b00;
+//     localIoDone <= 1'b0;
+// end
 
 //assign signals
 assign modeOutput = localModeOutput;
