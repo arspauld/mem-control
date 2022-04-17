@@ -2,8 +2,9 @@ module inOutControl (
     input           clk,
     input           key0,
     input           key1,
-    input   [4:0]   sw,
+    input   [3:0]   sw,
     input           memDone,
+    input   [15:0]  memOut,
 
     output  [1:0]   modeOutput, //hex
     output  [1:0]   stageLevel, // hex
@@ -11,7 +12,6 @@ module inOutControl (
     output  [15:0]  ioDataOut, // memory
     output  [15:0]  displayData, //hex
     output          ioDone     //ioDone
-
 );
 
 logic [3:0]     state;
@@ -32,9 +32,9 @@ localparam [3:0] WRITELEVEL_2 = 4'b0100;
 localparam [3:0] WRITELEVEL_3 = 4'b0101;
 
 //Pending: define them correctly
-localparam [3:0] READLEVEL_1 = 4'b0000;
-localparam [3:0] READLEVEL_2 = 4'b0000;
-localparam [3:0] READLEVEL_3 = 4'b0000;
+localparam [3:0] READLEVEL_1 = 4'b0110;
+localparam [3:0] READLEVEL_2 = 4'b0111;
+localparam [3:0] READLEVEL_3 = 4'b1000;
 
 //Local Memory Addresses
 logic [3:0] localMemAddrLSBSw0;
@@ -50,7 +50,6 @@ logic [3:0] localIoDataOutSw0;
 logic [3:0] localIoDataOutSw1;
 logic [3:0] localIoDataOutSw2;
 logic [3:0] localIoDataOutSw3;
-
 
 always@(posedge clk) begin
     if(memDone == 1'b1) begin
@@ -102,7 +101,7 @@ always@(posedge clk) begin
                 end
                 else begin
                     state <= WRITELEVEL_2;
-                    localDisplayData <= {7'b0,localMemAddrMSBSw2,localMemAddrMSBSw1,localMemAddrMSBSw0};
+                    localDisplayData <= {4'b0,localMemAddrMSBSw2,localMemAddrMSBSw1,localMemAddrMSBSw0};
                 end
             end
 
@@ -117,8 +116,6 @@ always@(posedge clk) begin
                     localDisplayData <= {localIoDataOutSw3,localIoDataOutSw2,localIoDataOutSw1,localIoDataOutSw0};
                 end
             end
-
-
 
             READMODE : begin //read
                 if(key0 == 1'b1) begin //change mode
@@ -135,6 +132,41 @@ always@(posedge clk) begin
                 end
             end
 
+            READLEVEL_1 : begin //write level 1
+                if(key1 == 1'b1) begin
+                    state <= READLEVEL_2;
+                    localStageLevel <= 2'b10;
+                end
+                else begin
+                    state <= READLEVEL_1;
+                    localDisplayData <= {localMemAddrLSBSw3,localMemAddrLSBSw2,localMemAddrLSBSw1,localMemAddrLSBSw0};
+                end
+            end
+
+            READLEVEL_2 : begin
+                if(key1 == 1'b1) begin
+                    state <= READLEVEL_3;
+                    localStageLevel <= 2'b11;
+                    localIoDone <= 1'b1;
+                end
+                else begin
+                    state <= READLEVEL_2;
+                    localDisplayData <= memOut;
+                end
+            end
+
+            READLEVEL_3 : begin
+                if(key1 == 1'b1) begin
+                    state <= IDLE;
+                    localModeOutput <= 2'b00;
+                    localStageLevel <= 2'b00;
+                end
+                else begin
+                    state <= READLEVEL_3;
+                    localDisplayData <= {4'b0,localMemAddrMSBSw2,localMemAddrMSBSw1,localMemAddrMSBSw0};
+                end
+            end
+
             default : begin
                 if(key0 == 1) begin
                     state <= CLEARMODE;
@@ -144,15 +176,22 @@ always@(posedge clk) begin
                 else begin
                     localModeOutput <= 2'b11;
                 end
-                state <= IDLE;
 
+                localStageLevel <= 2'b00;
+                localIoDone <= 1'b0;
             end
         endcase
     end
     else begin
-        state <= IDLE; 
+        if(state == WRITELEVEL_3) begin
+            state <= IDLE;
+        end
+        else begin
+            state <= READLEVEL_3;
+        end 
     end
 end
+
 
 always @(posedge sw[0]) begin
     case(state)
@@ -269,25 +308,6 @@ always @(posedge sw[3]) begin
         end
     endcase
 end
-
-// always @(posedge sw[4]) begin
-//     localMemAddrLSBSw0 <= 4'b0;
-//     localMemAddrLSBSw1 <= 4'b0;
-//     localMemAddrLSBSw2 <= 4'b0;
-//     localMemAddrLSBSw3 <= 4'b0;
-
-//     localMemAddrMSBSw0 <= 4'b0;
-//     localMemAddrMSBSw1 <= 4'b0;
-//     localMemAddrMSBSw2 <= 4'b0;
-
-//     localIoDataOutSw0 <= 4'b0;
-//     localIoDataOutSw1 <= 4'b0;
-//     localIoDataOutSw2 <= 4'b0;
-//     localIoDataOutSw3 <= 4'b0;
-
-//     localStageLevel <= 2'b00;
-//     localIoDone <= 1'b0;
-// end
 
 //assign signals
 assign modeOutput = localModeOutput;
