@@ -163,7 +163,7 @@ always@(posedge clk) begin
                 end
                 else begin
                     state <= READLEVEL_3;
-                    localDisplayData <= {4'b0,localMemAddrMSBSw2,localMemAddrMSBSw1,localMemAddrMSBSw0};
+                    localDisplayData <= {memOut[15:12],memOut[11:8], memOut[7:4], memOut[3:0]};
                 end
             end
 
