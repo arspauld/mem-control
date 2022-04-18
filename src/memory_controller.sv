@@ -59,8 +59,8 @@ module memory_controller(
     output logic DRAM_CS_N;
 
     // Define STATES for execution
-    typedef enum logic [4:0] {
-		RESET = 	        19'b0000000000000000001,
+    typedef enum logic [18:0] {
+	RESET = 	    19'b0000000000000000001,
         RESET_NOP0 =        19'b0000000000000000010,
         RESET_PRECHARGE =   19'b0000000000000000100,
         RESET_REF0 =        19'b0000000000000001000,
@@ -101,7 +101,7 @@ module memory_controller(
     end
 
     // Next state logic, directly from state machine
-    always_comb @(STATE, ready, cmd)
+    always_comb /*@(/*STATE, ready, cmd)*/
     begin
         case(STATE)
             RESET:              NEXT_STATE <= RESET_NOP0;
@@ -129,10 +129,10 @@ module memory_controller(
             IDLE: begin
                 // issue READ command
                 if(ready && cmd == 2'b01)
-                    NEXT_STATE <= READ;
+                    NEXT_STATE <= READ_INITIAL;
                 // issue WRITE command
                 else if(ready && cmd == 2'b10)
-                    NEXT_STATE <= WRITE;
+                    NEXT_STATE <= WRITE_INITIAL;
                 // continue to idle
                 else 
                     NEXT_STATE <= IDLE;
@@ -142,7 +142,7 @@ module memory_controller(
     end
 
     // Apply control signals and read data
-    always_comb @(*)
+    always_comb /*@(/**)*/
     begin
         case(STATE)
             RESET: begin // NOP
@@ -448,4 +448,4 @@ module memory_controller(
     assign DRAM_CLK = clk;   // Tie DRAM clock to memory controller clock
     // assign DRAM_BA[1:0] = addr[24:23];
 
-endmodule : memory_controller;
+endmodule 
