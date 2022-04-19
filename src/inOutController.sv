@@ -37,20 +37,21 @@ module inOutControl (
 
         // Define STATES for execution
     typedef enum logic [11:0] {
-	    IDLE = 	     12'b000000000001,
+        RESET =      13'b0000000000001,
+	    IDLE = 	     13'b0000000000010,
         
-        READ_ST0 =   12'b000000000010,
-        READ_ST1 =   12'b000000000100,
-        READ_ST2 =   12'b000000001000,
-        READ_WAIT =  12'b000000010000,
-        READ_DONE =  12'b000000100000,
+        READ_ST0 =   13'b0000000000100,
+        READ_ST1 =   13'b0000000001000,
+        READ_ST2 =   13'b0000000010000,
+        READ_WAIT =  13'b0000000100000,
+        READ_DONE =  13'b0000001000000,
 
-        WRITE_ST0 =  12'b000001000000,
-        WRITE_ST1 =  12'b000010000000,
-        WRITE_ST2 =  12'b000100000000,
-        WRITE_ST3 =  12'b001000000000,
-        WRITE_ST4 =  12'b010000000000,
-        WRITE_WAIT = 12'b100000000000
+        WRITE_ST0 =  13:we'b0000010000000,
+        WRITE_ST1 =  13'b0000100000000,
+        WRITE_ST2 =  13'b0001000000000,
+        WRITE_ST3 =  13'b0010000000000,
+        WRITE_ST4 =  13'b0100000000000,
+        WRITE_WAIT = 13'b1000000000000
 
 	} io_statetype;
 
@@ -60,10 +61,23 @@ module inOutControl (
     always_ff @(posedge clk)
     begin
         if(key0_debounce == 1'b1 && key1_debounce == 1'b1) begin
-            STATE <= IDLE;
+            STATE <= RESET;
 		  end
         else 
         case(STATE)
+            RESET: begin
+                if(key0_pulse) begin
+                    STATE <= IDLE;
+                    memoryAddress <= 25'b0;
+                    write_data <= 16'b0;
+						  
+                end
+                else begin
+                    STATE <= RESET;
+                    memoryAddress <= 25'b0;
+                    write_data <= 16'b0;
+                end
+            end
             IDLE: begin
                 if(key0_pulse) begin
                     STATE <= READ_ST0;
@@ -268,23 +282,28 @@ module inOutControl (
             IDLE: begin
                 ioDone <= 1'b0;
                 modeOutput <= 2'b00;
-					 reset_out <= 1'b1;
+                reset_out <= 1'b1;
+            end
+            IDLE: begin
+                ioDone <= 1'b0;
+                modeOutput <= 2'b00;
+                reset_out <= 1'b0;
             end
 
             READ_ST0: begin
                 ioDone <= 1'b0;
                 modeOutput <= 2'b01;
-					 reset_out <= 1'b0;
+                reset_out <= 1'b0;
             end
             READ_ST1: begin
                 ioDone <= 1'b0;
                 modeOutput <= 2'b01;
-					 reset_out <= 1'b0;
+                reset_out <= 1'b0;
             end
             READ_ST2: begin
                 ioDone <= 1'b0;
                 modeOutput <= 2'b01;
-					 reset_out <= 1'b0;
+                reset_out <= 1'b0;
             end
             READ_WAIT: begin
                 ioDone <= 1'b1;
@@ -294,44 +313,44 @@ module inOutControl (
             READ_DONE: begin
                 ioDone <= 1'b0;
                 modeOutput <= 2'b00;
-					 reset_out <= 1'b0;
+                reset_out <= 1'b0;
             end
 
             WRITE_ST0: begin
                 ioDone <= 1'b0;
                 modeOutput <= 2'b10;
-					 reset_out <= 1'b0;
+                reset_out <= 1'b0;
             end
             WRITE_ST1: begin
                 ioDone <= 1'b0;
                 modeOutput <= 2'b10;
-					 reset_out <= 1'b0;
+                reset_out <= 1'b0;
             end
             WRITE_ST2: begin
                 ioDone <= 1'b0;
                 modeOutput <= 2'b10;
-					 reset_out <= 1'b0;
+                reset_out <= 1'b0;
             end
             WRITE_ST3: begin
                 ioDone <= 1'b0;
                 modeOutput <= 2'b10;
-					 reset_out <= 1'b0;
+                reset_out <= 1'b0;
             end
             WRITE_ST4: begin
                 ioDone <= 1'b0;
                 modeOutput <= 2'b10;
-					 reset_out <= 1'b0;
+                reset_out <= 1'b0;
             end
             WRITE_WAIT: begin
                 modeOutput <= 2'b10;
-					 reset_out <= 1'b0;
-					 ioDone <= 1'b1;
+                reset_out <= 1'b0;
+                ioDone <= 1'b1;
             end
 
             default: begin
                 ioDone <= 1'b0;
                 modeOutput <= 2'b00;
-					 reset_out <= 1'b0;
+                reset_out <= 1'b0;
             end
 
         endcase
