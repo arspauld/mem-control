@@ -289,7 +289,7 @@ module inOutControl (
             READ_WAIT: begin
                 ioDone <= 1'b1;
                 modeOutput <= 2'b01;
-					 reset_out <= 1'b0;
+				reset_out <= 1'b0;
             end
             READ_DONE: begin
                 ioDone <= 1'b0;
