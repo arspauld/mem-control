@@ -139,7 +139,7 @@ module memory_controller(
             WRITE_CMD:          NEXT_STATE <= WRITE_NOP;
             WRITE_NOP:          NEXT_STATE <= IDLE;
 
-            REFRESH_INITIAL:    NEXT_STATE <= RESET_NOP0;
+            REFRESH_INITIAL:    NEXT_STATE <= REFRESH_NOP0;
             REFRESH_NOP0:       NEXT_STATE <= REFRESH_AUTO;
             REFRESH_AUTO:       NEXT_STATE <= REFRESH_NOP1;
             REFRESH_NOP1:       NEXT_STATE <= REFRESH_NOP2;
@@ -149,12 +149,12 @@ module memory_controller(
             // IDLE has branches based on commands
             IDLE: begin
                 // issue READ command
-                if(ready && cmd == 2'b01)
+                if(ready == 1'b1 && cmd == 2'b01)
                 begin
                     NEXT_STATE <= READ_INITIAL;
                 end
                 // issue WRITE command
-                else if(ready && cmd == 2'b10)
+                else if(ready == 1'b1 && cmd == 2'b10)
                 begin
                     NEXT_STATE <= WRITE_INITIAL;
                 end
