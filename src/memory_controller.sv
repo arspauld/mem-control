@@ -149,14 +149,9 @@ module memory_controller(
             // IDLE has branches based on commands
             IDLE: begin
                 // issue READ command
-                if(ready == 1'b1 && cmd == 2'b01)
+                if(ready)
                 begin
-                    NEXT_STATE <= READ_INITIAL;
-                end
-                // issue WRITE command
-                else if(ready == 1'b1 && cmd == 2'b10)
-                begin
-                    NEXT_STATE <= WRITE_INITIAL;
+                    NEXT_STATE <= cmd == 2'b10 ? WRITE_INITIAL : READ_INITIAL;
                 end
                 // check for refresh
                 else if (refresh_count == 0)
