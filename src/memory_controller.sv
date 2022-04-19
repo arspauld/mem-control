@@ -58,30 +58,39 @@ module memory_controller(
     output logic DRAM_WE_N;
     output logic DRAM_CS_N;
 
+    // Autorefresh counter
+    logic [5:0] refresh_count;
+
     // Define STATES for execution
-    typedef enum logic [18:0] {
-	RESET = 	    19'b0000000000000000001,
-        RESET_NOP0 =        19'b0000000000000000010,
-        RESET_PRECHARGE =   19'b0000000000000000100,
-        RESET_REF0 =        19'b0000000000000001000,
-        RESET_NOP1 =        19'b0000000000000010000,
-        RESET_REF1 =        19'b0000000000000100000,
-        RESET_NOP2 =        19'b0000000000001000000,
-        RESET_LOAD =        19'b0000000000010000000,
-        RESET_NOP3 =        19'b0000000000100000000,
+    typedef enum logic [24:0] {
+	    RESET = 	        25'b0000000000000000000000001,
+        RESET_NOP0 =        25'b0000000000000000000000010,
+        RESET_PRECHARGE =   25'b0000000000000000000000100,
+        RESET_REF0 =        25'b0000000000000000000001000,
+        RESET_NOP1 =        25'b0000000000000000000010000,
+        RESET_REF1 =        25'b0000000000000000000100000,
+        RESET_NOP2 =        25'b0000000000000000001000000,
+        RESET_LOAD =        25'b0000000000000000010000000,
+        RESET_NOP3 =        25'b0000000000000000100000000,
 
-        READ_INITIAL =      19'b0000000001000000000,
-        READ_ACTIVE =       19'b0000000010000000000,
-        READ_CMD =          19'b0000000100000000000,
-        READ_NOP =          19'b0000001000000000000,
-        READ_DATA =         19'b0000010000000000000,
+        READ_INITIAL =      25'b0000000000000001000000000,
+        READ_ACTIVE =       25'b0000000000000010000000000,
+        READ_CMD =          25'b0000000000000100000000000,
+        READ_NOP =          25'b0000000000001000000000000,
+        READ_DATA =         25'b0000000000010000000000000,
+        WRITE_INITIAL =     25'b0000000000100000000000000,
+        WRITE_ACTIVE =      25'b0000000001000000000000000,
+        WRITE_CMD =         25'b0000000010000000000000000,
+        WRITE_NOP =         25'b0000000100000000000000000,
 
-        WRITE_INITIAL =     19'b0000100000000000000,
-        WRITE_ACTIVE =      19'b0001000000000000000,
-        WRITE_CMD =         19'b0010000000000000000,
-        WRITE_NOP =         19'b0100000000000000000,
+        REFRESH_INITIAL =   25'b0000001000000000000000000
+        REFRESH_NOP0 =      25'b0000010000000000000000000
+        REFRESH_AUTO =      25'b0000100000000000000000000
+        REFRESH_NOP1 =      25'b0001000000000000000000000
+        REFRESH_NOP2 =      25'b0010000000000000000000000
+        REFRESH_IDLE =      25'b0100000000000000000000000,
 
-        IDLE =              19'b1000000000000000000
+        IDLE =              25'b1000000000000000000000000
 
 	} statetype;
 
@@ -125,6 +134,12 @@ module memory_controller(
             WRITE_CMD:          NEXT_STATE <= WRITE_NOP;
             WRITE_NOP:          NEXT_STATE <= IDLE;
 
+            REFRESH_INITIAL:    NEXT_STATE <= RESET_NOP0;
+            REFRESH_NOP0:       NEXT_STATE <= REFRESH_AUTO;
+            REFRESH_AUTO:       NEXT_STATE <= REFRESH_NOP1;
+            REFRESH_NOP1:       NEXT_STATE <= REFRESH_NOP2;
+            REFRESH_NOP2:       NEXT_STATE <= REFRESH_IDLE;
+
             // IDLE has branches based on commands
             IDLE: begin
                 // issue READ command
@@ -133,6 +148,9 @@ module memory_controller(
                 // issue WRITE command
                 else if(ready && cmd == 2'b10)
                     NEXT_STATE <= WRITE_INITIAL;
+                // check for refresh
+                else if (refresh_count == 0)
+                    NEXT_STATE <= REFRESH_INITIAL;
                 // continue to idle
                 else 
                     NEXT_STATE <= IDLE;
