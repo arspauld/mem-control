@@ -43,7 +43,7 @@ module memory_controller_tb;
     // Address/Data
     logic [12:0] DRAM_ADDR;
     logic [1:0] DRAM_BA;
-    logic [15:0] DRAM_DQ;
+    wire [15:0] DRAM_DQ;
 
     // Command/Control
     logic DRAM_LDQM;
@@ -68,8 +68,10 @@ module memory_controller_tb;
         addr <= 25'h0FFFF;
         ready <= 1'b0;
 
+        #5 rst <= 1'b0;
+
         // submit reset command
-        #30;
+        #70;
         
         // prepare write command
         rst <= 1'b0;
