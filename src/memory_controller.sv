@@ -551,8 +551,8 @@ module memory_controller(
                     DRAM_RAS_N <= 1'b1;
                     DRAM_CAS_N <= 1'b1;
                     DRAM_WE_N <= 1'b1;
-                    DRAM_LDQM <= 1'b0;
-                    DRAM_UDQM <= 1'b0;
+                    DRAM_LDQM <= 1'b1;
+                    DRAM_UDQM <= 1'b1;
 
                     DRAM_BA <= 2'b00;
                     DRAM_ADDR <= 13'b00;

@@ -149,7 +149,7 @@ logic	[15:0] 	dqOutput;
 logic pulse0;
 logic pulse1;
 
-logic [11:0] state;
+logic [12:0] state;
 logic			 reset;
 
 

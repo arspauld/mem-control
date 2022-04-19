@@ -32,11 +32,11 @@ module inOutControl (
     output  logic [15:0]  write_data; // memory
     output  logic [15:0]  displayData; //hex
     output  logic         ioDone;     //ioDone
-    output  logic [11:0]  out_state;
+    output  logic [12:0]  out_state;
 	 output 	logic			  reset_out;
 
         // Define STATES for execution
-    typedef enum logic [11:0] {
+    typedef enum logic [12:0] {
         RESET =      13'b0000000000001,
 	    IDLE = 	     13'b0000000000010,
         
@@ -46,7 +46,7 @@ module inOutControl (
         READ_WAIT =  13'b0000000100000,
         READ_DONE =  13'b0000001000000,
 
-        WRITE_ST0 =  13:we'b0000010000000,
+        WRITE_ST0 =  13'b0000010000000,
         WRITE_ST1 =  13'b0000100000000,
         WRITE_ST2 =  13'b0001000000000,
         WRITE_ST3 =  13'b0010000000000,
@@ -279,7 +279,7 @@ module inOutControl (
     always_comb
     begin
         case(STATE)
-            IDLE: begin
+            RESET: begin
                 ioDone <= 1'b0;
                 modeOutput <= 2'b00;
                 reset_out <= 1'b1;

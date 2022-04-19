@@ -3,7 +3,7 @@
 // state 3: print rlte = 2'b10
 
 module hexDisplay (
-    input   [11:0]  state,     
+    input   [12:0]  state,     
     input   [15:0]  inVal,
     
     output  [7:0]   HEX0,
@@ -34,21 +34,25 @@ localparam BLANK = 5'd21;
 
 // Define STATES for execution
 
-localparam IDLE =       12'b000000000001;
-localparam READ_ST0 =   12'b000000000010;
-localparam READ_ST1 =   12'b000000000100;
-localparam READ_ST2 =   12'b000000001000;
-localparam READ_WAIT =  12'b000000010000;
-localparam READ_DONE =  12'b000000100000;
-localparam WRITE_ST0 =  12'b000001000000;
-localparam WRITE_ST1 =  12'b000010000000;
-localparam WRITE_ST2 =  12'b000100000000;
-localparam WRITE_ST3 =  12'b001000000000;
-localparam WRITE_ST4 =  12'b010000000000;
-localparam WRITE_WAIT = 12'b100000000000;
+localparam RESET        =   13'b0000000000001;
+localparam IDLE         =   13'b0000000000010;
+localparam READ_ST0     =   13'b0000000000100;
+localparam READ_ST1     =   13'b0000000001000;
+localparam READ_ST2     =   13'b0000000010000;
+localparam READ_WAIT    =   13'b0000000100000;
+localparam READ_DONE    =   13'b0000001000000;
+localparam WRITE_ST0    =   13'b0000010000000;
+localparam WRITE_ST1    =   13'b0000100000000;
+localparam WRITE_ST2    =   13'b0001000000000;
+localparam WRITE_ST3    =   13'b0010000000000;
+localparam WRITE_ST4    =   13'b0100000000000;
+localparam WRITE_WAIT   =   13'b1000000000000;
 
-always_comb begin
+always_comb begin  
     case (state)
+        RESET : begin
+            {char5,char4,char3,char2,char1,char0} = {CHAR_R, 5'd5, CHAR_T, BLANK, BLANK, BLANK};
+			end
         IDLE : begin
             {char5,char4,char3,char2,char1,char0} = {5'd1,CHAR_D,CHAR_L,CHAR_E,BLANK,BLANK};
         end
