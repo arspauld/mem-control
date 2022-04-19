@@ -11,53 +11,79 @@ cModel Technology
 dC:/intelFPGA/20.1
 vhexDisplay
 Z0 DXx6 sv_std 3 std 0 22 VYECXdT12H8WgbUP_5Y6:3
-!s110 1649995360
+Z1 !s110 1650337323
 !i10b 1
-!s100 MLkjcM?LI@DGkI8YHO1ah2
-Z1 !s11b Dg1SIo80bB@j0V0VzS_@n1
-ImXhmAGO?M;LYZHiTdD?@T2
-Z2 VDg1SIo80bB@j0V0VzS_@n1
+!s100 4FiOL;MQd`fD;PD39_?J_3
+Z2 !s11b Dg1SIo80bB@j0V0VzS_@n1
+I[T:Y;Fn;gzZ8o5MeN9KK<3
+Z3 VDg1SIo80bB@j0V0VzS_@n1
 S1
-Z3 dC:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/tests
-w1649995356
+Z4 dC:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/tests
+w1650334142
 8C:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/hexDisplay.sv
 FC:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/hexDisplay.sv
-!i122 6
-L0 5 74
-Z4 OV;L;2020.1;71
+!i122 31
+L0 5 88
+Z5 OV;L;2020.1;71
 r1
 !s85 0
 31
-!s108 1649995360.000000
+Z6 !s108 1650337323.000000
 !s107 C:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/hexDisplay.sv|
 !s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/hexDisplay.sv|
 !i113 1
-Z5 o-work work -sv
-Z6 tCvgOpt 0
+Z7 o-work work -sv
+Z8 tCvgOpt 0
 nhex@display
 vhexDriver
 R0
-!s110 1649992767
+R1
 !i10b 1
 !s100 aW<Va[jOo[ghh51f2?0l]3
-R1
-IUbSAhED6OOmA3W`ho_95i0
 R2
-S1
+IUbSAhED6OOmA3W`ho_95i0
 R3
-w1649991864
+S1
+R4
+w1650332368
 8C:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/hexDriver.sv
 FC:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/hexDriver.sv
-!i122 4
+!i122 32
 L0 1 32
-R4
+R5
 r1
 !s85 0
 31
-!s108 1649992767.000000
+R6
 !s107 C:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/hexDriver.sv|
 !s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/hexDriver.sv|
 !i113 1
-R5
-R6
+R7
+R8
 nhex@driver
+vpulseDetector
+R0
+R1
+!i10b 1
+!s100 No[o;aoEDW<bfT[gXD:]G2
+R2
+IcDz=8FoW:I_RD@^D@Y]7S0
+R3
+S1
+R4
+w1650337317
+8C:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/pulseDetector.sv
+FC:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/pulseDetector.sv
+!i122 33
+L0 1 35
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/pulseDetector.sv|
+!s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/pulseDetector.sv|
+!i113 1
+R7
+R8
+npulse@detector

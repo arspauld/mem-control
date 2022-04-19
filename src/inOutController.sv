@@ -5,6 +5,7 @@ module inOutControl (
     input   [3:0]   sw,
     input           memDone,
     input   [15:0]  memOut,
+    input   [8:0]   debouncedSwitches,
 
     output  [1:0]   modeOutput, //hex
     output  [1:0]   stageLevel, // hex
@@ -239,7 +240,7 @@ always @(posedge sw[0]) begin
             end
         end
         default : begin
-
+				/*
             localMemAddrLSBSw0 <= 4'b0;
             localMemAddrLSBSw1 <= 4'b0;
             localMemAddrLSBSw2 <= 4'b0;
@@ -252,7 +253,7 @@ always @(posedge sw[0]) begin
             localIoDataOutSw0 <= 4'b0;
             localIoDataOutSw1 <= 4'b0;
             localIoDataOutSw2 <= 4'b0;
-            localIoDataOutSw3 <= 4'b0;
+            localIoDataOutSw3 <= 4'b0;*/
 
         end
     endcase
@@ -301,7 +302,7 @@ always @(posedge sw[1]) begin
             end
         end
         default : begin
-
+/*
             localMemAddrLSBSw0 <= 4'b0;
             localMemAddrLSBSw1 <= 4'b0;
             localMemAddrLSBSw2 <= 4'b0;
@@ -314,7 +315,7 @@ always @(posedge sw[1]) begin
             localIoDataOutSw0 <= 4'b0;
             localIoDataOutSw1 <= 4'b0;
             localIoDataOutSw2 <= 4'b0;
-            localIoDataOutSw3 <= 4'b0;
+            localIoDataOutSw3 <= 4'b0;*/
 
         end
     endcase
@@ -363,7 +364,7 @@ always @(posedge sw[2]) begin
             end
         end
         default : begin
-
+/*
             localMemAddrLSBSw0 <= 4'b0;
             localMemAddrLSBSw1 <= 4'b0;
             localMemAddrLSBSw2 <= 4'b0;
@@ -376,7 +377,7 @@ always @(posedge sw[2]) begin
             localIoDataOutSw0 <= 4'b0;
             localIoDataOutSw1 <= 4'b0;
             localIoDataOutSw2 <= 4'b0;
-            localIoDataOutSw3 <= 4'b0;
+            localIoDataOutSw3 <= 4'b0;*/
 
         end
     endcase
@@ -410,7 +411,7 @@ always @(posedge sw[3]) begin
             end
         end
         default : begin
-
+/*
             localMemAddrLSBSw0 <= 4'b0;
             localMemAddrLSBSw1 <= 4'b0;
             localMemAddrLSBSw2 <= 4'b0;
@@ -423,7 +424,7 @@ always @(posedge sw[3]) begin
             localIoDataOutSw0 <= 4'b0;
             localIoDataOutSw1 <= 4'b0;
             localIoDataOutSw2 <= 4'b0;
-            localIoDataOutSw3 <= 4'b0;
+            localIoDataOutSw3 <= 4'b0;*/
 
         end
     endcase

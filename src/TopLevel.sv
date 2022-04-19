@@ -127,6 +127,24 @@ module TopLevel(
 //  REG/WIRE declarations
 //=======================================================
 
+typedef enum logic [11:0] {
+    IDLE =       12'b000000000001,
+
+    READ_ST0 =   12'b000000000010,
+    READ_ST1 =   12'b000000000100,
+    READ_ST2 =   12'b000000001000,
+    READ_WAIT =  12'b000000010000,
+    READ_DONE =  12'b000000100000,
+
+    WRITE_ST0 =  12'b000001000000,
+    WRITE_ST1 =  12'b000010000000,
+    WRITE_ST2 =  12'b000100000000,
+    WRITE_ST3 =  12'b001000000000,
+    WRITE_ST4 =  12'b010000000000,
+    WRITE_WAIT = 12'b100000000000
+
+} io_statetype;
+
 logic	[1:0]		stage;
 logic	[15:0]	valToShow;
 logic [3:0]		debouncedSwitches;
@@ -145,13 +163,10 @@ logic [1:0]		modeSelect;
 wire	[15:0]	dq;	//goes into the controller
 logic	[15:0]	dqInput;
 logic	[15:0] 	dqOutput;
-reg 	key0PressedDelay;
 
-always @(posedge MAX10_CLK1_50)
-  begin
-    key0PressedDelay <= key0Pressed;
-	end
-
+logic pulse0;
+logic pulse1;
+logic flag;
 
 
 //=======================================================
@@ -175,7 +190,18 @@ meta #(
   .out_sig (key1Pressed)
 );
 
-assign buttons = {key1Pressed, key0Pressed};
+pulseDetector pulse0Detect(
+	.clk	(MAX10_CLK1_50),
+	.key	(!KEY[0]),
+	.pulse	(pulse0)
+);
+
+pulseDetector pulse1Detect(
+	.clk	(MAX10_CLK1_50),
+	.key	(!KEY[1]),
+	.pulse	(pulse1)
+);
+
 assign LEDR[0] = KEY[0];
 assign LEDR[1] = key0Pressed;
 
@@ -190,9 +216,9 @@ meta #(
 
 
 hexDisplay disp(
-	.stage			(stage),
-	.modeSelect		(modeSelect),     
-	.inVal			(valToShow),
+	
+	.state			(12'b100000000000),
+	.inVal			(16'hFFFF),
 	.HEX0				(HEX0),
 	.HEX1				(HEX1),
 	.HEX2				(HEX2),
@@ -204,8 +230,8 @@ hexDisplay disp(
 
 inOutControl inputController(
     .clk			(MAX10_CLK1_50),
-    .key0		(key0PressedDelay),
-    .key1		(key1Pressed),
+    .key0		(pulse0),
+    .key1		(pulse1),
     .sw			(debouncedSwitches),
     .memDone	(1'b1),
 	 .memOut		(dqInput),

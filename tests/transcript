@@ -1,109 +1,213 @@
-# Compile of hexDisplay.sv failed with 1 errors.
-# Compile of hexDriver.sv failed with 20 errors.
-# 2 compiles, 2 failed with 21 errors.
-# Compile of hexDisplay.sv failed with 3 errors.
-# Compile of hexDriver.sv failed with 20 errors.
-# 2 compiles, 2 failed with 23 errors.
-# Compile of hexDisplay.sv failed with 3 errors.
-# Compile of hexDriver.sv failed with 20 errors.
-# 2 compiles, 2 failed with 23 errors.
-# Compile of hexDisplay.sv failed with 3 errors.
-# Compile of hexDriver.sv was successful.
-# 2 compiles, 1 failed with 3 errors.
-# Compile of hexDisplay.sv failed with 2 errors.
-# Compile of hexDisplay.sv failed with 3 errors.
-# Compile of hexDisplay.sv failed with 1 errors.
-# Compile of hexDisplay.sv failed with 1 errors.
-# Compile of hexDisplay.sv failed with 1 errors.
-# Compile of hexDisplay.sv failed with 1 errors.
-# Compile of hexDisplay.sv failed with 2 errors.
 # Compile of hexDisplay.sv was successful.
-vsim -gui work.hexDisplay
-# vsim -gui work.hexDisplay 
-# Start time: 22:08:49 on Apr 14,2022
+# Compile of hexDriver.sv was successful.
+# Compile of pulseDetector.sv failed with 1 errors.
+# 3 compiles, 1 failed with 1 error.
+# Compile of pulseDetector.sv was successful.
+vsim -gui work.pulseDetector
+# vsim -gui work.pulseDetector 
+# Start time: 21:42:25 on Apr 18,2022
 # Loading sv_std.std
-# Loading work.hexDisplay
-# Loading work.hexDriver
+# Loading work.pulseDetector
 add wave -position insertpoint  \
-sim:/hexDisplay/readStage \
-sim:/hexDisplay/writeStage \
-sim:/hexDisplay/modeSelect \
-sim:/hexDisplay/inVal \
-sim:/hexDisplay/HEX0 \
-sim:/hexDisplay/HEX1 \
-sim:/hexDisplay/HEX2 \
-sim:/hexDisplay/HEX3 \
-sim:/hexDisplay/HEX4 \
-sim:/hexDisplay/HEX5
-force -freeze sim:/hexDisplay/modeSelect 00 0
+sim:/pulseDetector/clk \
+sim:/pulseDetector/key \
+sim:/pulseDetector/pulse
+force -freeze sim:/pulseDetector/clk 1 0, 0 {50 ps} -r 100
 run
-force -freeze sim:/hexDisplay/readStage 00 0
 run
-# Compile of hexDisplay.sv was successful.
-# Compile of hexDriver.sv was successful.
-# 2 compiles, 0 failed with no errors.
+run
+run
+run
+force -freeze sim:/pulseDetector/key 1 2
+force -freeze sim:/pulseDetector/key HiZ 2 -cancel 20
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+force -freeze sim:/pulseDetector/key 1 0 -cancel 0
+run
+run
+run
+run
+run
 restart -f
 # ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
-# Loading work.hexDisplay
-# Loading work.hexDriver
+force -freeze sim:/pulseDetector/clk 1 0, 0 {50 ps} -r 100
+force -freeze sim:/pulseDetector/key 1 0
 run
-force -freeze sim:/hexDisplay/modeSelect 00 0
+# GetModuleFileName: No se puede encontrar el módulo especificado.
+# 
+# 
 run
-quit -sim
-# End time: 22:15:27 on Apr 14,2022, Elapsed time: 0:06:38
-# Errors: 0, Warnings: 1
-
-
+run
+# Compile of hexDisplay.sv was successful.
 # Compile of hexDriver.sv was successful.
-# Compile of hexDisplay.sv was successful.
-vsim -gui work.hexDisplay
-# vsim -gui work.hexDisplay 
-# Start time: 22:19:51 on Apr 14,2022
-# Loading sv_std.std
-# Loading work.hexDisplay
-# Loading work.hexDriver
-add wave -position insertpoint  \
-sim:/hexDisplay/modeBit \
-sim:/hexDisplay/readStage \
-sim:/hexDisplay/writeStage \
-sim:/hexDisplay/modeSelect \
-sim:/hexDisplay/inVal \
-sim:/hexDisplay/HEX0 \
-sim:/hexDisplay/HEX1 \
-sim:/hexDisplay/HEX2 \
-sim:/hexDisplay/HEX3 \
-sim:/hexDisplay/HEX4 \
-sim:/hexDisplay/HEX5
-force -freeze sim:/hexDisplay/modeSelect 00 0
-run
-force -freeze sim:/hexDisplay/readStage 00 0
-run
-run
-force -freeze sim:/hexDisplay/modeSelect 01 0
-# Compile of hexDisplay.sv failed with 1 errors.
-# Compile of hexDisplay.sv was successful.
+# Compile of pulseDetector.sv was successful.
+# 3 compiles, 0 failed with no errors.
 restart -f
 # ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
-# Loading work.hexDisplay
-force -freeze sim:/hexDisplay/modeSelect 01 0
+# Loading work.pulseDetector
+force -freeze sim:/pulseDetector/clk 1 0, 0 {50 ps} -r 100
+force -freeze sim:/pulseDetector/key 1 0
+force -freeze sim:/pulseDetector/key 1 0
+run
+# GetModuleFileName: No se puede encontrar el módulo especificado.
+# 
+# 
+run
+run
+run
+run
+# Compile of hexDisplay.sv was successful.
+# Compile of hexDriver.sv was successful.
+# Compile of pulseDetector.sv failed with 3 errors.
+# 3 compiles, 1 failed with 3 errors.
+# Compile of hexDisplay.sv was successful.
+# Compile of hexDriver.sv was successful.
+# Compile of pulseDetector.sv failed with 3 errors.
+# 3 compiles, 1 failed with 3 errors.
+# Compile of hexDisplay.sv was successful.
+# Compile of hexDriver.sv was successful.
+# Compile of pulseDetector.sv was successful.
+# 3 compiles, 0 failed with no errors.
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.pulseDetector
+force -freeze sim:/pulseDetector/clk 1 0, 0 {50 ps} -r 100
+run
+# GetModuleFileName: No se puede encontrar el módulo especificado.
+# 
+# 
+run
+run
+force -freeze sim:/pulseDetector/key 1 0
+run
+run
+run
+run
+# Compile of hexDisplay.sv was successful.
+# Compile of hexDriver.sv was successful.
+# Compile of pulseDetector.sv was successful.
+# 3 compiles, 0 failed with no errors.
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.pulseDetector
+force -freeze sim:/pulseDetector/clk 1 0, 0 {50 ps} -r 100
+run
+# GetModuleFileName: No se puede encontrar el módulo especificado.
+# 
+# 
+run
+run
+run
+force -freeze sim:/pulseDetector/key 1 0
+run
+run
+restart -f
+force -freeze sim:/pulseDetector/clk 1 0, 0 {50 ps} -r 100
+force -freeze sim:/pulseDetector/key 1 0
+run
+# GetModuleFileName: No se puede encontrar el módulo especificado.
+# 
+# 
+run
+run
+# Compile of hexDisplay.sv was successful.
+# Compile of hexDriver.sv was successful.
+# Compile of pulseDetector.sv failed with 2 errors.
+# 3 compiles, 1 failed with 2 errors.
+# Compile of hexDisplay.sv was successful.
+# Compile of hexDriver.sv was successful.
+# Compile of pulseDetector.sv was successful.
+# 3 compiles, 0 failed with no errors.
+# Load canceled
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.pulseDetector
+force -freeze sim:/pulseDetector/clk 1 0, 0 {50 ps} -r 100
+run
+# GetModuleFileName: No se puede encontrar el módulo especificado.
+# 
+# 
+run
+force -freeze sim:/pulseDetector/key 1 0
+run
+run
+run
 run
 add wave -position insertpoint  \
-sim:/hexDisplay/char0 \
-sim:/hexDisplay/char1 \
-sim:/hexDisplay/char2 \
-sim:/hexDisplay/char3 \
-sim:/hexDisplay/char4 \
-sim:/hexDisplay/char5
+sim:/pulseDetector/flag
 run
 run
-force -freeze sim:/hexDisplay/readStage 00 0
+run
+add wave -position insertpoint  \
+sim:/pulseDetector/localPulse
+# Compile of hexDisplay.sv was successful.
+# Compile of hexDriver.sv was successful.
+# Compile of pulseDetector.sv was successful.
+# 3 compiles, 0 failed with no errors.
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.pulseDetector
+force -freeze sim:/pulseDetector/clk 1 0, 0 {500 ps} -r 1000
+run
+# GetModuleFileName: No se puede encontrar el módulo especificado.
+# 
+# 
+run
+restart -f
+force -freeze sim:/pulseDetector/clk 1 0, 0 {5 ps} -r 10
+run
+# GetModuleFileName: No se puede encontrar el módulo especificado.
+# 
+# 
+force -freeze sim:/pulseDetector/key 1 0 -cancel 5
 run
 run
-force -freeze sim:/hexDisplay/writeStage 00 0
-force -freeze sim:/hexDisplay/modeSelect 10 0
+force -freeze sim:/pulseDetector/key 1 0
 run
 run
-force -freeze sim:/hexDisplay/modeSelect 00 0
 run
-# End time: 23:07:20 on Apr 14,2022, Elapsed time: 0:47:29
+run
+force -freeze sim:/pulseDetector/key 0 0
+run
+run
+run
+# Compile of hexDisplay.sv was successful.
+# Compile of hexDriver.sv was successful.
+# Compile of pulseDetector.sv was successful.
+# 3 compiles, 0 failed with no errors.
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.pulseDetector
+force -freeze sim:/pulseDetector/clk 1 0, 0 {5 ps} -r 10
+run
+# GetModuleFileName: No se puede encontrar el módulo especificado.
+# 
+# 
+force -freeze sim:/pulseDetector/key 1 0
+run
+run
+force -freeze sim:/pulseDetector/key 0 0
+run
+force -freeze sim:/pulseDetector/key 1 0
+run
+run
+force -freeze sim:/pulseDetector/key 0 0
+run
+# End time: 22:04:41 on Apr 18,2022, Elapsed time: 0:22:16
 # Errors: 0, Warnings: 1

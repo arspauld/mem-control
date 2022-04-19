@@ -25,6 +25,8 @@ begin
         5'd16 : outVal = 8'hAF; // r
         5'd17 : outVal = 8'hA1; // d
         5'd18 : outVal = 8'h87; // t
+        5'd19 : outVal = 8'hF7; //_
+        5'd20 : outVal = 8'hBF; //-
         default : outVal = 8'hFF; // blank
     endcase
 end
