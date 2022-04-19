@@ -70,7 +70,7 @@ always_comb begin
         end
 
         READ_DONE : begin
-            {char5,char4,char3,char2,char1,char0} = {CHAR_R,CHAR_,inVal[15:12],1'b0,inVal[11:8],1'b0,inVal[7:4],1'b0,inVal[3:0]};
+            {char5,char4,char3,char2,char1,char0} = {BLANK,BLANK,1'b0,inVal[15:12],1'b0,inVal[11:8],1'b0,inVal[7:4],1'b0,inVal[3:0]};
         end
 
         WRITE_ST0 : begin
@@ -98,7 +98,7 @@ always_comb begin
         end
 
         default : begin
-            {char5,char4,char3,char2,char1,char0} = {CHAR_D, 5'd1, CHAR_E, BLANK, BLANK, BLANK};
+            {char5,char4,char3,char2,char1,char0} = {BLANK, BLANK, BLANK, BLANK, BLANK, BLANK};
 		  end
 
     endcase

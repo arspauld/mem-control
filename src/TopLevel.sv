@@ -241,7 +241,7 @@ memory_controller memController(
     .addr		(memAddrOut),
     .dq			(dq),
     .ready		(ioDone),
-    .rst			(1'b1),
+    .rst			(reset),
     .valid		(memDone),
 
     .DRAM_ADDR	(DRAM_ADDR),

@@ -60,7 +60,7 @@ module memory_controller(
 
     // Define STATES for execution
     typedef enum logic [18:0] {
-	RESET = 	    19'b0000000000000000001,
+		  RESET = 	    		 19'b0000000000000000001,
         RESET_NOP0 =        19'b0000000000000000010,
         RESET_PRECHARGE =   19'b0000000000000000100,
         RESET_REF0 =        19'b0000000000000001000,
@@ -151,8 +151,8 @@ module memory_controller(
                     DRAM_RAS_N <= 1'b1;
                     DRAM_CAS_N <= 1'b1;
                     DRAM_WE_N <= 1'b1;
-                    DRAM_LDQM <= 1'b0;
-                    DRAM_UDQM <= 1'b0;
+                    DRAM_LDQM <= 1'b1;
+                    DRAM_UDQM <= 1'b1;
 
                     DRAM_BA <= 2'b00;
                     DRAM_ADDR <= 13'b00;
@@ -166,8 +166,8 @@ module memory_controller(
                     DRAM_RAS_N <= 1'b1;
                     DRAM_CAS_N <= 1'b1;
                     DRAM_WE_N <= 1'b1;
-                    DRAM_LDQM <= 1'b0;
-                    DRAM_UDQM <= 1'b0;
+                    DRAM_LDQM <= 1'b1;
+                    DRAM_UDQM <= 1'b1;
 
                     DRAM_BA <= 2'b00;
                     DRAM_ADDR <= 13'b00;
@@ -181,8 +181,8 @@ module memory_controller(
                     DRAM_RAS_N <= 1'b0;
                     DRAM_CAS_N <= 1'b1;
                     DRAM_WE_N <= 1'b0;
-                    DRAM_LDQM <= 1'b0;
-                    DRAM_UDQM <= 1'b0;
+                    DRAM_LDQM <= 1'b1;
+                    DRAM_UDQM <= 1'b1;
 
                     DRAM_BA <= 2'b00;
                     DRAM_ADDR <= 13'b00;
@@ -196,8 +196,8 @@ module memory_controller(
                     DRAM_RAS_N <= 1'b0;
                     DRAM_CAS_N <= 1'b0;
                     DRAM_WE_N <= 1'b1;
-                    DRAM_LDQM <= 1'b0;
-                    DRAM_UDQM <= 1'b0;
+                    DRAM_LDQM <= 1'b1;
+                    DRAM_UDQM <= 1'b1;
 
                     DRAM_BA <= 2'b00;
                     DRAM_ADDR <= 13'b00;
@@ -212,8 +212,8 @@ module memory_controller(
                     DRAM_RAS_N <= 1'b1;
                     DRAM_CAS_N <= 1'b1;
                     DRAM_WE_N <= 1'b1;
-                    DRAM_LDQM <= 1'b0;
-                    DRAM_UDQM <= 1'b0;
+                    DRAM_LDQM <= 1'b1;
+                    DRAM_UDQM <= 1'b1;
 
                     DRAM_BA <= 2'b00;
                     DRAM_ADDR <= 13'b00;
@@ -227,8 +227,8 @@ module memory_controller(
                     DRAM_RAS_N <= 1'b0;
                     DRAM_CAS_N <= 1'b0;
                     DRAM_WE_N <= 1'b1;
-                    DRAM_LDQM <= 1'b0;
-                    DRAM_UDQM <= 1'b0;
+                    DRAM_LDQM <= 1'b1;
+                    DRAM_UDQM <= 1'b1;
 
                     DRAM_BA <= 2'b00;
                     DRAM_ADDR <= 13'b00;
@@ -242,8 +242,8 @@ module memory_controller(
                     DRAM_RAS_N <= 1'b1;
                     DRAM_CAS_N <= 1'b1;
                     DRAM_WE_N <= 1'b1;
-                    DRAM_LDQM <= 1'b0;
-                    DRAM_UDQM <= 1'b0;
+                    DRAM_LDQM <= 1'b1;
+                    DRAM_UDQM <= 1'b1;
 
                     DRAM_BA <= 2'b00;
                     DRAM_ADDR <= 13'b00;
@@ -257,8 +257,8 @@ module memory_controller(
                     DRAM_RAS_N <= 1'b0;
                     DRAM_CAS_N <= 1'b0;
                     DRAM_WE_N <= 1'b0;
-                    DRAM_LDQM <= 1'b0;
-                    DRAM_UDQM <= 1'b0;
+                    DRAM_LDQM <= 1'b1;
+                    DRAM_UDQM <= 1'b1;
 
                     DRAM_BA <= 2'b00;
                     DRAM_ADDR <= 13'b0001000101000;
@@ -272,8 +272,8 @@ module memory_controller(
                     DRAM_RAS_N <= 1'b1;
                     DRAM_CAS_N <= 1'b1;
                     DRAM_WE_N <= 1'b1;
-                    DRAM_LDQM <= 1'b0;
-                    DRAM_UDQM <= 1'b0;
+                    DRAM_LDQM <= 1'b1;
+                    DRAM_UDQM <= 1'b1;
 
                     DRAM_BA <= 2'b00;
                     DRAM_ADDR <= 13'b00;
