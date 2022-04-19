@@ -127,24 +127,6 @@ module TopLevel(
 //  REG/WIRE declarations
 //=======================================================
 
-typedef enum logic [11:0] {
-    IDLE =       12'b000000000001,
-
-    READ_ST0 =   12'b000000000010,
-    READ_ST1 =   12'b000000000100,
-    READ_ST2 =   12'b000000001000,
-    READ_WAIT =  12'b000000010000,
-    READ_DONE =  12'b000000100000,
-
-    WRITE_ST0 =  12'b000001000000,
-    WRITE_ST1 =  12'b000010000000,
-    WRITE_ST2 =  12'b000100000000,
-    WRITE_ST3 =  12'b001000000000,
-    WRITE_ST4 =  12'b010000000000,
-    WRITE_WAIT = 12'b100000000000
-
-} io_statetype;
-
 logic	[1:0]		stage;
 logic	[15:0]	valToShow;
 logic [3:0]		debouncedSwitches;
@@ -166,7 +148,9 @@ logic	[15:0] 	dqOutput;
 
 logic pulse0;
 logic pulse1;
-logic flag;
+
+logic [11:0] state;
+logic			 reset;
 
 
 //=======================================================
@@ -202,23 +186,21 @@ pulseDetector pulse1Detect(
 	.pulse	(pulse1)
 );
 
-assign LEDR[0] = KEY[0];
-assign LEDR[1] = key0Pressed;
 
 meta #(
-  .DATA_WIDTH (4),
+  .DATA_WIDTH (9),
   .DEPTH (6)
 ) meta_switches (
   .clk (MAX10_CLK1_50),
-  .in_sig (SW[3:0]),
+  .in_sig (SW[8:0]),
   .out_sig (debouncedSwitches)
 );
 
 
 hexDisplay disp(
 	
-	.state			(12'b100000000000),
-	.inVal			(16'hFFFF),
+	.state			(state),
+	.inVal			(valToShow),
 	.HEX0				(HEX0),
 	.HEX1				(HEX1),
 	.HEX2				(HEX2),
@@ -227,27 +209,31 @@ hexDisplay disp(
 	.HEX5				(HEX5)
 );
 
+assign LEDR[8:0] = SW[8:0];
+
 
 inOutControl inputController(
-    .clk			(MAX10_CLK1_50),
-    .key0		(pulse0),
-    .key1		(pulse1),
-    .sw			(debouncedSwitches),
-    .memDone	(1'b1),
-	 .memOut		(dqInput),
+    .clk					(MAX10_CLK1_50),
+    .key0_pulse		(pulse0),
+    .key1_pulse		(pulse1),
+	 .key0_debounce	(key0Pressed),
+	 .key1_debounce	(key1Pressed),
+    .sw					(debouncedSwitches),
+    .memDone			(memDone),
+	 .read_data			(dqInput),
 
     .modeOutput		(modeSelect), 	//hex
-    .stageLevel		(stage), 		// hex
     .memoryAddress	(memAddrOut), 					// memory
-    .ioDataOut			(dqOutput), 	// memory
+    .write_data		(dqOutput), 	// memory
     .displayData		(valToShow), 	//hex
-    .ioDone     		(1'b0)			//ioDone
-
+    .ioDone     		(ioDone),
+	 .out_state			(state),
+	 .reset_out			(reset)
 );
 
 assign dq = modeSelect == 2'b10 ? dqOutput : 16'bz;
 assign dqInput = dq;
-
+assign LEDR[9] = ioDone;
 
 memory_controller memController(
     .clk			(MAX10_CLK1_50),

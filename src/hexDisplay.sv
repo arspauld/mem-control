@@ -3,7 +3,7 @@
 // state 3: print rlte = 2'b10
 
 module hexDisplay (
-    input io_statetype state,     
+    input   [11:0]  state,     
     input   [15:0]  inVal,
     
     output  [7:0]   HEX0,
@@ -33,28 +33,22 @@ localparam CHAR_DASH = 5'd20;
 localparam BLANK = 5'd21;
 
 // Define STATES for execution
-typedef enum logic [11:0] {
-    IDLE =       12'b000000000001,
 
-    READ_ST0 =   12'b000000000010,
-    READ_ST1 =   12'b000000000100,
-    READ_ST2 =   12'b000000001000,
-    READ_WAIT =  12'b000000010000,
-    READ_DONE =  12'b000000100000,
-
-    WRITE_ST0 =  12'b000001000000,
-    WRITE_ST1 =  12'b000010000000,
-    WRITE_ST2 =  12'b000100000000,
-    WRITE_ST3 =  12'b001000000000,
-    WRITE_ST4 =  12'b010000000000,
-    WRITE_WAIT = 12'b100000000000
-
-} io_statetype;
-
-io_statetype STATE;
+localparam IDLE =       12'b000000000001;
+localparam READ_ST0 =   12'b000000000010;
+localparam READ_ST1 =   12'b000000000100;
+localparam READ_ST2 =   12'b000000001000;
+localparam READ_WAIT =  12'b000000010000;
+localparam READ_DONE =  12'b000000100000;
+localparam WRITE_ST0 =  12'b000001000000;
+localparam WRITE_ST1 =  12'b000010000000;
+localparam WRITE_ST2 =  12'b000100000000;
+localparam WRITE_ST3 =  12'b001000000000;
+localparam WRITE_ST4 =  12'b010000000000;
+localparam WRITE_WAIT = 12'b100000000000;
 
 always_comb begin
-    case (STATE)
+    case (state)
         IDLE : begin
             {char5,char4,char3,char2,char1,char0} = {5'd1,CHAR_D,CHAR_L,CHAR_E,BLANK,BLANK};
         end
