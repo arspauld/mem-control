@@ -105,6 +105,11 @@ module memory_controller(
         end
         else
         begin
+            if(STATE == IDLE)
+                refresh_count <= refresh_count - 1;
+            else
+                refresh_count <= 6'd32;
+                
             STATE <= NEXT_STATE;
         end
     end
@@ -147,25 +152,21 @@ module memory_controller(
                 if(ready && cmd == 2'b01)
                 begin
                     NEXT_STATE <= READ_INITIAL;
-                    refresh_count <= 6'd32;
                 end
                 // issue WRITE command
                 else if(ready && cmd == 2'b10)
                 begin
                     NEXT_STATE <= WRITE_INITIAL;
-                    refresh_count <= 6'd32;
                 end
                 // check for refresh
                 else if (refresh_count == 0)
                 begin
                     NEXT_STATE <= REFRESH_INITIAL;
-                    refresh_count <= 6'd32;
                 end
                 // continue to idle
                 else 
                 begin
                     NEXT_STATE <= IDLE;
-                    refresh_count <= refresh_count - 1;
                 end
             end
 
