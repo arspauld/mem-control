@@ -241,18 +241,8 @@ always @(posedge sw[0]) begin
         default : begin
 
             localMemAddrLSBSw0 <= 4'b0;
-            localMemAddrLSBSw1 <= 4'b0;
-            localMemAddrLSBSw2 <= 4'b0;
-            localMemAddrLSBSw3 <= 4'b0;
-
             localMemAddrMSBSw0 <= 4'b0;
-            localMemAddrLSBSw1 <= 4'b0;
-            localMemAddrLSBSw2 <= 1'b0;
-
             localIoDataOutSw0 <= 4'b0;
-            localIoDataOutSw1 <= 4'b0;
-            localIoDataOutSw2 <= 4'b0;
-            localIoDataOutSw3 <= 4'b0;
 
         end
     endcase
@@ -302,19 +292,9 @@ always @(posedge sw[1]) begin
         end
         default : begin
 
-            localMemAddrLSBSw0 <= 4'b0;
             localMemAddrLSBSw1 <= 4'b0;
-            localMemAddrLSBSw2 <= 4'b0;
-            localMemAddrLSBSw3 <= 4'b0;
-
-            localMemAddrMSBSw0 <= 4'b0;
-            localMemAddrLSBSw1 <= 4'b0;
-            localMemAddrLSBSw2 <= 1'b0;
-
-            localIoDataOutSw0 <= 4'b0;
+            localMemAddrMSBSw1 <= 4'b0;
             localIoDataOutSw1 <= 4'b0;
-            localIoDataOutSw2 <= 4'b0;
-            localIoDataOutSw3 <= 4'b0;
 
         end
     endcase
@@ -364,19 +344,9 @@ always @(posedge sw[2]) begin
         end
         default : begin
 
-            localMemAddrLSBSw0 <= 4'b0;
-            localMemAddrLSBSw1 <= 4'b0;
             localMemAddrLSBSw2 <= 4'b0;
-            localMemAddrLSBSw3 <= 4'b0;
-
-            localMemAddrMSBSw0 <= 4'b0;
-            localMemAddrMSBSw1 <= 4'b0;
             localMemAddrMSBSw2 <= 1'b0;
-
-            localIoDataOutSw0 <= 4'b0;
-            localIoDataOutSw1 <= 4'b0;
             localIoDataOutSw2 <= 4'b0;
-            localIoDataOutSw3 <= 4'b0;
 
         end
     endcase
@@ -411,18 +381,7 @@ always @(posedge sw[3]) begin
         end
         default : begin
 
-            localMemAddrLSBSw0 <= 4'b0;
-            localMemAddrLSBSw1 <= 4'b0;
-            localMemAddrLSBSw2 <= 4'b0;
             localMemAddrLSBSw3 <= 4'b0;
-
-            localMemAddrMSBSw0 <= 4'b0;
-            localMemAddrLSBSw1 <= 4'b0;
-            localMemAddrLSBSw2 <= 1'b0;
-
-            localIoDataOutSw0 <= 4'b0;
-            localIoDataOutSw1 <= 4'b0;
-            localIoDataOutSw2 <= 4'b0;
             localIoDataOutSw3 <= 4'b0;
 
         end
