@@ -31,18 +31,15 @@ module memory_controller_tb;
     //INPUTS
     bit clk;
 
-
     logic [1:0] cmd;
     logic [24:0] addr;
     wire [15:0] dq;
-    logic [15:0] dq_data
+    logic [15:0] dq_data;
     logic ready;
     logic rst;
     logic valid;
 
-
     /** Interface to SDRAM CHIP **/
-
     // Address/Data
     logic [12:0] DRAM_ADDR;
     logic [1:0] DRAM_BA;
@@ -66,7 +63,7 @@ module memory_controller_tb;
 
     initial begin
         // prepare reset command
-        reset <= 1'b1;
+        rst <= 1'b1;
         cmd <= 2'b10;
         addr <= 25'h0FFFF;
         ready <= 1'b0;
@@ -75,7 +72,7 @@ module memory_controller_tb;
         #30;
         
         // prepare write command
-        reset <= 1'b0;
+        rst <= 1'b0;
         cmd <= 2'b10;
         addr <= 25'h0FFFF;
         ready <= 1'b1;
@@ -88,7 +85,7 @@ module memory_controller_tb;
         #30;
 
         // prepare read command
-        reset <= 1'b0;
+        rst <= 1'b0;
         cmd <= 2'b01;
         addr <= 25'h0FFFF;
         ready <= 1'b1;
