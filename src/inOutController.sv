@@ -1,322 +1,325 @@
 module inOutControl (
-    input           clk,
-    input           key0,
-    input           key1,
-    input   [3:0]   sw,
-    input           memDone,
-    input   [15:0]  memOut,
+    clk,
+    key0_debounce,
+    key1_debounce,
+    key0_pulse,
+    key1_pulse
+    sw,
+    memDone,
+    read_mem,
 
-    output  [1:0]   modeOutput, //hex
-    output  [1:0]   stageLevel, // hex
-    output  [24:0]  memoryAddress, // memory
-    output  [15:0]  ioDataOut, // memory
-    output  [15:0]  displayData, //hex
-    output          ioDone     //ioDone
+    modeOutput, //hex
+    memoryAddress, // memory
+    write_data, // memory
+    displayData, //hex
+    ioDone     //ioDone
 );
 
-logic [3:0]     state;
-logic [1:0]     localModeOutput;
-logic [1:0]     localStageLevel;
-logic [15:0]    localDisplayData;
-logic [24:0]    localMemAddr;
-logic [15:0]    localIoDataOut;
-logic           localIoDone;
+    input   logic         clk;
+    input   logic         key0_debounce;
+    input   logic         key1_debounce;
+    input   logic         key0_pulse;
+    input   logic         key1_pulse;
+    input   logic [8:0]   sw;
+    input   logic         memDone;
+    input   logic [15:0]  read_data;
 
-localparam [3:0] CLEARMODE = 4'b0000;
-localparam [3:0] READMODE = 4'b0001;
-localparam [3:0] WRITEMODE = 4'b0010;
-localparam [3:0] IDLE = 4'b1111;
+    output  logic [1:0]   mode_output;
+    output  logic [24:0]  memoryAddress; // memory
+    output  logic [15:0]  write_data; // memory
+    output  logic [15:0]  displayData; //hex
+    output  logic         ioDone;     //ioDone
+    output  logic [12:0]  out_state;
 
-localparam [3:0] WRITELEVEL_1 = 4'b0011;
-localparam [3:0] WRITELEVEL_2 = 4'b0100;
-localparam [3:0] WRITELEVEL_3 = 4'b0101;
+        // Define STATES for execution
+    typedef enum logic [11:0] {
+	    IDLE = 	     12'b000000000001,
+        
+        READ_ST0 =   12'b000000000010,
+        READ_ST1 =   12'b000000000100,
+        READ_ST2 =   12'b000000001000,
+        READ_WAIT =  12'b000000010000,
+        READ_DONE =  12'b000000100000,
 
-//Pending: define them correctly
-localparam [3:0] READLEVEL_1 = 4'b0110;
-localparam [3:0] READLEVEL_2 = 4'b0111;
-localparam [3:0] READLEVEL_3 = 4'b1000;
+        WRITE_ST0 =  12'b000001000000,
+        WRITE_ST1 =  12'b000010000000,
+        WRITE_ST2 =  12'b000100000000,
+        WRITE_ST3 =  12'b001000000000,
+        WRITE_ST4 =  12'b010000000000,
+        WRITE_WAIT = 12'b100000000000
 
-//Local Memory Addresses
-logic [3:0] localMemAddrLSBSw0;
-logic [3:0] localMemAddrLSBSw1;
-logic [3:0] localMemAddrLSBSw2;
-logic [3:0] localMemAddrLSBSw3;
+	} io_statetype;
 
-logic [3:0] localMemAddrMSBSw0;
-logic [3:0] localMemAddrMSBSw1;
-logic       localMemAddrMSBSw2;
+    io_statetype STATE;
 
-logic [3:0] localIoDataOutSw0;
-logic [3:0] localIoDataOutSw1;
-logic [3:0] localIoDataOutSw2;
-logic [3:0] localIoDataOutSw3;
-
-always@(posedge clk) begin
-    if(memDone == 1'b1) begin
-        case(state)
-            CLEARMODE : begin //clearCmd
-                if(key0 == 1'b1) begin //change mode
-                    state <= WRITEMODE;
-                    localModeOutput <= 2'b10;
-                    localStageLevel <= 2'b00;
+    // ADVANCE NEXT STATE
+    always_ff @(posedge clk)
+    begin
+        if(key0_debounce == 1'b1 and key1_debounce == 1'b1)
+            STATE <= IDLE;
+        else 
+        case(STATE)
+            IDLE: begin
+                if(key0_pulse) begin
+                    STATE <= READ_ST0;
+                    memoryAddress <= 25'b0;
+                    write_data <= 16'b0;
                 end
-                
                 else begin
-                    state <= CLEARMODE;
-                    localModeOutput <= 2'b00;
+                    STATE <= IDLE;
+                    memoryAddress <= 25'b0;
+                    write_data <= 16'b0;
                 end
             end
 
-            WRITEMODE : begin //write
-                if(key0 == 1'b1) begin //change mode
-                    state <= READMODE; // go to read
-                    localModeOutput = 2'b01;
-                    localStageLevel = 2'b00;
+            READ_ST0: begin
+                if(key0_pulse) begin
+                    STATE <= WRITE_ST0;
+                    memoryAddress <= 25'b0;
+                    write_data <= 16'b0;
                 end
-                else if (key1 == 1'b1) begin
-                    state <= WRITELEVEL_1; // write level 1
-                    localStageLevel <= 2'b01;
+                else if(key1_pulse) begin
+                    STATE <= READ_ST1;
+                    memoryAddress [7:0] <= sw[7:0];
+                    write_data <= 16'b0;
                 end
                 else begin
-                    state <= WRITEMODE;
-                    localModeOutput = 2'b10;
+                    STATE <= READ_ST0;
+                    memoryAddress <= memoryAddress;
+                    write_data <= write_data;
+                end
+            end
+            READ_ST1: begin
+                if(key0_pulse) begin
+                    STATE <= READ_ST1;
+                    memoryAddress <= memoryAddress
+                    write_data <= writeData;
+                end
+                else if(key1_pulse) begin
+                    STATE <= READ_ST2;
+                    memoryAddress [15:8] <= sw[7:0];
+                    write_data <= 16'b0;
+                end
+                else begin
+                    STATE <= READ_ST1;
+                    memoryAddress <= memoryAddress;
+                    write_data <= write_data;
+                end
+            end
+            READ_ST2: begin
+                if(key0_pulse) begin
+                    STATE <= READ_ST2;
+                    memoryAddress <= memoryAddress;
+                    write_data <= writeData;
+                end
+                else if(key1_pulse) begin
+                    STATE <= READ_WAIT;
+                    memoryAddress [24:16] <= sw[8:0];
+                    write_data <= 16'b0;
+                end
+                else begin
+                    STATE <= READ_ST2;
+                    memoryAddress <= memoryAddress;
+                    write_data <= write_data;
+                end
+            end
+            READ_WAIT: begin
+                if(memDone) begin
+                    STATE <= READ_DONE;
+                    memoryAddress <= memoryAddress;
+                    write_data <= write_data;
+                end
+                else begin
+                    STATE <= READ_WAIT;
+                    memoryAddress <= memoryAddress;
+                    write_data <= write_data;
+                end
+            end
+            READ_DONE: begin
+                if(key0_pulse) begin
+                    STATE <= IDLE;
+                    memoryAddress <= 25'b0;
+                    write_data <= 16'b0;
+                end
+                else begin
+                    STATE <= READ_DONE;
+                    memoryAddress <= memoryAddress;
+                    write_data <= write_data;
                 end
             end
 
-            WRITELEVEL_1 : begin //write level 1
-                if(key1 == 1'b1) begin
-                    state <= WRITELEVEL_2;
-                    localStageLevel <= 2'b10;
+            WRITE_ST0: begin
+                if(key0_pulse) begin
+                    STATE <= READ_ST0;
+                    memoryAddress <= 25'b0;
+                    write_data <= 16'b0;
+                end
+                else if(key1_pulse) begin
+                    STATE <= WRITE_ST1;
+                    memoryAddress [7:0] <= sw[7:0];
+                    write_data <= 16'b0;
                 end
                 else begin
-                    state <= WRITELEVEL_1;
-                    localDisplayData <= {localMemAddrLSBSw3,localMemAddrLSBSw2,localMemAddrLSBSw1,localMemAddrLSBSw0};
+                    STATE <= WRITE_ST0;
+                    memoryAddress <= memoryAddress;
+                    write_data <= write_data;
+                end
+            end
+            WRITE_ST1: begin
+                if(key0_pulse) begin
+                    STATE <= WRITE_ST1;
+                    memoryAddress <= memoryAddress;
+                    write_data <= 16'b0;
+                end
+                else if(key1_pulse) begin
+                    STATE <= WRITE_ST2;
+                    memoryAddress [15:8] <= sw[7:0];
+                    write_data <= 16'b0;
+                end
+                else begin
+                    STATE <= WRITE_ST1;
+                    memoryAddress <= memoryAddress;
+                    write_data <= write_data;
+                end
+            end
+            WRITE_ST2: begin
+                if(key0_pulse) begin
+                    STATE <= WRITE_ST2;
+                    memoryAddress <= memoryAddress;
+                    write_data <= 16'b0;
+                end
+                else if(key1_pulse) begin
+                    STATE <= READ_ST1;
+                    memoryAddress [24:16] <= sw[8:0];
+                    write_data <= 16'b0;
+                end
+                else begin
+                    STATE <= WRITE_ST2;
+                    memoryAddress <= memoryAddress;
+                    write_data <= write_data;
+                end
+            end
+            WRITE_ST3: begin
+                if(key0_pulse) begin
+                    STATE <= WRITE_ST3;
+                    memoryAddress <= memoryAddress;
+                    write_data <= write_data;
+                end
+                else if(key1_pulse) begin
+                    STATE <= WRITE_ST4;
+                    memoryAddress <= memoryAddress;
+                    write_data [7:0] <= sw[7:0];
+                end
+                else begin
+                    STATE <= WRITE_ST3;
+                    memoryAddress <= memoryAddress;
+                    write_data <= write_data;
+                end
+            end
+            WRITE_ST4: begin
+                if(key0_pulse) begin
+                    STATE <= WRITE_ST4;
+                    memoryAddress <= memoryAddress;
+                    write_data <= write_data;
+                end
+                else if(key1_pulse) begin
+                    STATE <= WRITE_WAIT;
+                    memoryAddress <= memoryAddress;
+                    write_data [15:8] <= sw[7:0];
+                end
+                else begin
+                    STATE <= WRITE_ST4;
+                    memoryAddress <= memoryAddress;
+                    write_data <= write_data;
+                end
+            end
+            WRITE_WAIT: begin
+                if(memDone) begin
+                    STATE <= IDLE;
+                    memoryAddress <= 25'b0;
+                    write_data <= 16'b0;
+                end
+                else begin
+                    STATE <= READ_WAIT;
+                    memoryAddress <= memoryAddress;
+                    write_data <= write_data;
                 end
             end
 
-            WRITELEVEL_2 : begin
-                if(key1 == 1'b1) begin
-                    state <= WRITELEVEL_3;
-                    localStageLevel <= 2'b11;
-                end
-                else begin
-                    state <= WRITELEVEL_2;
-                    localDisplayData <= {4'b0,localMemAddrMSBSw2,localMemAddrMSBSw1,localMemAddrMSBSw0};
-                end
+            default: begin
+                STATE <= IDLE;
+                memoryAddress <= 25'b0;
+                write_data <= 16'b0;
             end
 
-            WRITELEVEL_3 : begin
-                if(key1 == 1'b1) begin
-                    localStageLevel <= 2'b00;
-                    localModeOutput <= 2'b11;
-                    localIoDone <= 1'b1;
-                end
-                else begin
-                    state <= WRITELEVEL_3;
-                    localDisplayData <= {localIoDataOutSw3,localIoDataOutSw2,localIoDataOutSw1,localIoDataOutSw0};
-                end
-            end
-
-            READMODE : begin //read
-                if(key0 == 1'b1) begin //change mode
-                    state <= CLEARMODE; // go to clear
-                    localModeOutput = 2'b00;
-                    
-                end
-                else if (key1 == 1'b1) begin
-							localStageLevel = 2'b01;
-							localModeOutput = 2'b01;
-							state <= READLEVEL_1;
-                end
-                else begin
-                    state <= 4'b0001; //stay
-                    localModeOutput = 2'b01;
-                end
-            end
-
-            READLEVEL_1 : begin //write level 1
-                if(key1 == 1'b1) begin
-                    state <= READLEVEL_2;
-                    localStageLevel <= 2'b10;
-                end
-                else begin
-                    state <= READLEVEL_1;
-                    localDisplayData <= {localMemAddrLSBSw3,localMemAddrLSBSw2,localMemAddrLSBSw1,localMemAddrLSBSw0};
-                end
-            end
-
-            READLEVEL_2 : begin
-                if(key1 == 1'b1) begin
-                    state <= READLEVEL_3;
-                    localStageLevel <= 2'b11;
-                    localIoDone <= 1'b1;
-                end
-                else begin
-                    state <= READLEVEL_2;
-                    localDisplayData <= memOut;
-                end
-            end
-
-            READLEVEL_3 : begin
-                if(key1 == 1'b1) begin
-                    state <= IDLE;
-                    localModeOutput <= 2'b00;
-                    localStageLevel <= 2'b00;
-                end
-                else begin
-                    state <= READLEVEL_3;
-                    localDisplayData <= {memOut[15:12],memOut[11:8], memOut[7:4], memOut[3:0]};
-                end
-            end
-
-            default : begin
-                if(key0 == 1) begin
-                    state <= CLEARMODE;
-                    localModeOutput <= 2'b00;
-
-                end   
-                else begin
-                    localModeOutput <= 2'b11;
-                end
-
-                localStageLevel <= 2'b00;
-                localIoDone <= 1'b0;
-            end
         endcase
     end
-    else begin
-        if(state == WRITELEVEL_3) begin
-            state <= IDLE;
-        end
-        else begin
-            state <= READLEVEL_3;
-        end 
+
+    // combinational outputs
+    always_comb
+    begin
+        case(STATE)
+            IDLE: begin
+                ioDone <= 1'b0;
+                modeOutput <= 2'b00;
+            end
+
+            READ_ST0: begin
+                ioDone <= 1'b0;
+                modeOutput <= 2'b01;
+            end
+            READ_ST1: begin
+                ioDone <= 1'b0;
+                modeOutput <= 2'b01;
+            end
+            READ_ST2: begin
+                ioDone <= 1'b0;
+                modeOutput <= 2'b01;
+            end
+            READ_WAIT: begin
+                ioDone <= 1'b1;
+                modeOutput <= 2'b01;
+            end
+            READ_DONE: begin
+                ioDone <= 1'b0;
+                modeOutput <= 2'b00;
+            end
+
+            WRITE_ST0: begin
+                ioDone <= 1'b0;
+                modeOutput <= 2'b10;
+            end
+            WRITE_ST1: begin
+                ioDone <= 1'b0;
+                modeOutput <= 2'b10;
+            end
+            WRITE_ST2: begin
+                ioDone <= 1'b0;
+                modeOutput <= 2'b10;
+            end
+            WRITE_ST3: begin
+                ioDone <= 1'b0;
+                modeOutput <= 2'b10;
+            end
+            WRITE_ST4: begin
+                ioDone <= 1'b0;
+                modeOutput <= 2'b10;
+            end
+            WRITE_WAIT: begin
+                ioDone <= 1'b0;
+                modeOutput <= 2'b10;
+            end
+
+            default: begin
+                ioDone <= 1'b0;
+                modeOutput <= 2'b00;
+            end
+
+        endcase
     end
-end
 
+    assign displayData = read_data;
+    assign out_state = STATE;
 
-always @(posedge sw[0]) begin
-    case(state)
-        (WRITELEVEL_1 || READLEVEL_1) : begin
-            if(localMemAddrLSBSw0 == 4'hF) begin
-                localMemAddrLSBSw0 <= 4'h0;
-            end
-            else begin
-                localMemAddrLSBSw0 <= localMemAddrLSBSw0 + 1'b1;
-            end
-        end
-        (WRITELEVEL_2 || READLEVEL_2) : begin
-            if(localMemAddrMSBSw0 == 4'hF) begin
-                localMemAddrMSBSw0 <= 4'h0;
-            end
-            else begin
-                localMemAddrMSBSw0 <= localMemAddrMSBSw0 + 1'b1;
-            end
-        end
-        WRITELEVEL_3 : begin
-            if(localIoDataOutSw0 == 4'hF) begin
-                localIoDataOutSw0 <= 4'h0;
-            end
-            else begin
-                localIoDataOutSw0 <= localIoDataOutSw0 + 1'b1;
-            end
-        end
-        default : begin
-        end
-    endcase
-end
-
-always @(posedge sw[1]) begin
-    case(state)
-        (WRITELEVEL_1 || READLEVEL_1) : begin
-            if(localMemAddrLSBSw1 == 4'hF) begin
-                localMemAddrLSBSw1 <= 4'h0;
-            end
-            else begin
-                localMemAddrLSBSw1 <= localMemAddrLSBSw1 + 1'b1;
-            end
-        end
-        (WRITELEVEL_2 || READLEVEL_2) : begin
-            if(localMemAddrMSBSw1 == 4'hF) begin
-                localMemAddrMSBSw1 <= 4'h0;
-            end
-            else begin
-                localMemAddrMSBSw1 <= localMemAddrMSBSw1 + 1'b1;
-            end
-        end
-        WRITELEVEL_3 : begin
-            if(localIoDataOutSw1 == 4'hF) begin
-                localIoDataOutSw1 <= 4'h0;
-            end
-            else begin
-                localIoDataOutSw1 <= localIoDataOutSw1 + 1'b1;
-            end
-        end
-        default : begin
-        end
-    endcase
-end
-
-always @(posedge sw[2]) begin
-    case(state)
-        (WRITELEVEL_1 || READLEVEL_1) : begin
-            if(localMemAddrLSBSw2 == 4'hF) begin
-                localMemAddrLSBSw2 <= 4'h0;
-            end
-            else begin
-                localMemAddrLSBSw2 <= localMemAddrLSBSw2 + 1'b1;
-            end
-        end
-        (WRITELEVEL_2 || READLEVEL_2) : begin
-            if(localMemAddrMSBSw2 == 1'b1) begin
-                localMemAddrMSBSw2 <= 1'b0;
-            end
-            else begin
-                localMemAddrMSBSw2 <= localMemAddrMSBSw2 + 1'b1;
-            end
-        end
-        WRITELEVEL_3 : begin
-            if(localIoDataOutSw2 == 4'hF) begin
-                localIoDataOutSw2 <= 4'h0;
-            end
-            else begin
-                localIoDataOutSw2 <= localIoDataOutSw2 + 1'b1;
-            end
-        end
-        default : begin
-        end
-    endcase
-end
-
-always @(posedge sw[3]) begin
-    case(state)
-        (WRITELEVEL_1 || READLEVEL_1) : begin
-            if(localMemAddrLSBSw3 == 4'hF) begin
-                localMemAddrLSBSw3 <= 4'h0;
-            end
-            else begin
-                localMemAddrLSBSw3 <= localMemAddrLSBSw3 + 1'b1;
-            end
-        end
-        WRITELEVEL_3 : begin
-            if(localIoDataOutSw3 == 4'hF) begin
-                localIoDataOutSw3 <= 4'h0;
-            end
-            else begin
-                localIoDataOutSw3 <= localIoDataOutSw3 + 1'b1;
-            end
-        end
-        default : begin
-        end
-    endcase
-end
-
-//assign signals
-assign modeOutput = localModeOutput;
-assign stageLevel = localStageLevel;
-assign memoryAddress = {localMemAddrMSBSw2,localMemAddrMSBSw1,localMemAddrMSBSw0,localMemAddrLSBSw3,localMemAddrLSBSw2,localMemAddrLSBSw1,localMemAddrLSBSw0};
-assign ioDataOut = {localIoDataOutSw3,localIoDataOutSw2,localIoDataOutSw1,localIoDataOutSw0};
-assign displayData = localDisplayData;
-assign ioDone = localIoDone;
 
 endmodule
