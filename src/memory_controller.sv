@@ -434,7 +434,7 @@ module memory_controller(
                     DRAM_ADDR <= 13'b00;
 
 
-                    valid <= 1'b0;
+                    valid <= 1'b1;
             end
 
         endcase

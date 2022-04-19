@@ -1,0 +1,63 @@
+m255
+K4
+z2
+!s11f vlog 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/intelFPGA/20.1
+vhexDisplay
+Z0 DXx6 sv_std 3 std 0 22 VYECXdT12H8WgbUP_5Y6:3
+!s110 1649995360
+!i10b 1
+!s100 MLkjcM?LI@DGkI8YHO1ah2
+Z1 !s11b Dg1SIo80bB@j0V0VzS_@n1
+ImXhmAGO?M;LYZHiTdD?@T2
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+S1
+Z3 dC:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/tests
+w1649995356
+8C:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/hexDisplay.sv
+FC:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/hexDisplay.sv
+!i122 6
+L0 5 74
+Z4 OV;L;2020.1;71
+r1
+!s85 0
+31
+!s108 1649995360.000000
+!s107 C:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/hexDisplay.sv|
+!s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/hexDisplay.sv|
+!i113 1
+Z5 o-work work -sv
+Z6 tCvgOpt 0
+nhex@display
+vhexDriver
+R0
+!s110 1649992767
+!i10b 1
+!s100 aW<Va[jOo[ghh51f2?0l]3
+R1
+IUbSAhED6OOmA3W`ho_95i0
+R2
+S1
+R3
+w1649991864
+8C:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/hexDriver.sv
+FC:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/hexDriver.sv
+!i122 4
+L0 1 32
+R4
+r1
+!s85 0
+31
+!s108 1649992767.000000
+!s107 C:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/hexDriver.sv|
+!s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/juanc/OneDrive - uah.edu/Documentos/UAH/CPE-526/mem-control/src/hexDriver.sv|
+!i113 1
+R5
+R6
+nhex@driver

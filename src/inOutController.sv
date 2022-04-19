@@ -121,10 +121,12 @@ always@(posedge clk) begin
                 if(key0 == 1'b1) begin //change mode
                     state <= CLEARMODE; // go to clear
                     localModeOutput = 2'b00;
-                    localStageLevel = 2'b01;
+                    
                 end
                 else if (key1 == 1'b1) begin
-                    //TODO
+							localStageLevel = 2'b01;
+							localModeOutput = 2'b01;
+							state <= READLEVEL_1;
                 end
                 else begin
                     state <= 4'b0001; //stay
