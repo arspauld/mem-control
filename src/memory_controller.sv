@@ -62,31 +62,6 @@ module memory_controller(
     logic [5:0] refresh_count;
 
     // Define STATES for execution
-<<<<<<< HEAD
-    typedef enum logic [18:0] {
-		  RESET = 	    		 19'b0000000000000000001,
-        RESET_NOP0 =        19'b0000000000000000010,
-        RESET_PRECHARGE =   19'b0000000000000000100,
-        RESET_REF0 =        19'b0000000000000001000,
-        RESET_NOP1 =        19'b0000000000000010000,
-        RESET_REF1 =        19'b0000000000000100000,
-        RESET_NOP2 =        19'b0000000000001000000,
-        RESET_LOAD =        19'b0000000000010000000,
-        RESET_NOP3 =        19'b0000000000100000000,
-
-        READ_INITIAL =      19'b0000000001000000000,
-        READ_ACTIVE =       19'b0000000010000000000,
-        READ_CMD =          19'b0000000100000000000,
-        READ_NOP =          19'b0000001000000000000,
-        READ_DATA =         19'b0000010000000000000,
-
-        WRITE_INITIAL =     19'b0000100000000000000,
-        WRITE_ACTIVE =      19'b0001000000000000000,
-        WRITE_CMD =         19'b0010000000000000000,
-        WRITE_NOP =         19'b0100000000000000000,
-
-        IDLE =              19'b1000000000000000000
-=======
     typedef enum logic [24:0] {
 	    RESET = 	        25'b0000000000000000000000001,
         RESET_NOP0 =        25'b0000000000000000000000010,
@@ -108,15 +83,14 @@ module memory_controller(
         WRITE_CMD =         25'b0000000010000000000000000,
         WRITE_NOP =         25'b0000000100000000000000000,
 
-        REFRESH_INITIAL =   25'b0000001000000000000000000
-        REFRESH_NOP0 =      25'b0000010000000000000000000
-        REFRESH_AUTO =      25'b0000100000000000000000000
-        REFRESH_NOP1 =      25'b0001000000000000000000000
-        REFRESH_NOP2 =      25'b0010000000000000000000000
+        REFRESH_INITIAL =   25'b0000001000000000000000000,
+        REFRESH_NOP0 =      25'b0000010000000000000000000,
+        REFRESH_AUTO =      25'b0000100000000000000000000,
+        REFRESH_NOP1 =      25'b0001000000000000000000000,
+        REFRESH_NOP2 =      25'b0010000000000000000000000,
         REFRESH_IDLE =      25'b0100000000000000000000000,
 
         IDLE =              25'b1000000000000000000000000
->>>>>>> io_mods
 
 	} statetype;
 
@@ -165,21 +139,34 @@ module memory_controller(
             REFRESH_AUTO:       NEXT_STATE <= REFRESH_NOP1;
             REFRESH_NOP1:       NEXT_STATE <= REFRESH_NOP2;
             REFRESH_NOP2:       NEXT_STATE <= REFRESH_IDLE;
+            REFRESH_IDLE:       NEXT_STATE <= IDLE;
 
             // IDLE has branches based on commands
             IDLE: begin
                 // issue READ command
                 if(ready && cmd == 2'b01)
+                begin
                     NEXT_STATE <= READ_INITIAL;
+                    refresh_count <= 6'd32;
+                end
                 // issue WRITE command
                 else if(ready && cmd == 2'b10)
+                begin
                     NEXT_STATE <= WRITE_INITIAL;
+                    refresh_count <= 6'd32;
+                end
                 // check for refresh
                 else if (refresh_count == 0)
+                begin
                     NEXT_STATE <= REFRESH_INITIAL;
+                    refresh_count <= 6'd32;
+                end
                 // continue to idle
                 else 
+                begin
                     NEXT_STATE <= IDLE;
+                    refresh_count <= refresh_count - 1;
+                end
             end
 
         endcase
@@ -462,7 +449,99 @@ module memory_controller(
                     valid <= 1'b1;
             end
 
+            REFRESH_INITIAL: begin
+                    DRAM_CKE <= 1'b1;
+                    DRAM_CS_N <= 1'b0;
+                    DRAM_RAS_N <= 1'b1;
+                    DRAM_CAS_N <= 1'b1;
+                    DRAM_WE_N <= 1'b1;
+                    DRAM_LDQM <= 1'b0;
+                    DRAM_UDQM <= 1'b0;
 
+                    DRAM_BA <= 2'b00;
+                    DRAM_ADDR <= 13'b00;
+
+                    valid <= 1'b0;
+            end
+
+            REFRESH_NOP0: begin
+                    DRAM_CKE <= 1'b1;
+                    DRAM_CS_N <= 1'b0;
+                    DRAM_RAS_N <= 1'b1;
+                    DRAM_CAS_N <= 1'b1;
+                    DRAM_WE_N <= 1'b1;
+                    DRAM_LDQM <= 1'b0;
+                    DRAM_UDQM <= 1'b0;
+
+                    DRAM_BA <= 2'b00;
+                    DRAM_ADDR <= 13'b00;
+
+
+                    valid <= 1'b0;
+            end
+
+            REFRESH_AUTO: begin
+                    DRAM_CKE <= 1'b1;
+                    DRAM_CS_N <= 1'b0;
+                    DRAM_RAS_N <= 1'b0;
+                    DRAM_CAS_N <= 1'b0;
+                    DRAM_WE_N <= 1'b1;
+                    DRAM_LDQM <= 1'b1;
+                    DRAM_UDQM <= 1'b1;
+
+                    DRAM_BA <= 2'b00;
+                    DRAM_ADDR <= 13'b00;
+
+                    valid <= 1'b0;
+            end
+
+            REFRESH_NOP1: begin
+                    DRAM_CKE <= 1'b1;
+                    DRAM_CS_N <= 1'b0;
+                    DRAM_RAS_N <= 1'b1;
+                    DRAM_CAS_N <= 1'b1;
+                    DRAM_WE_N <= 1'b1;
+                    DRAM_LDQM <= 1'b0;
+                    DRAM_UDQM <= 1'b0;
+
+                    DRAM_BA <= 2'b00;
+                    DRAM_ADDR <= 13'b00;
+
+
+                    valid <= 1'b0;
+            end
+
+            REFRESH_NOP2: begin
+                    DRAM_CKE <= 1'b1;
+                    DRAM_CS_N <= 1'b0;
+                    DRAM_RAS_N <= 1'b1;
+                    DRAM_CAS_N <= 1'b1;
+                    DRAM_WE_N <= 1'b1;
+                    DRAM_LDQM <= 1'b0;
+                    DRAM_UDQM <= 1'b0;
+
+                    DRAM_BA <= 2'b00;
+                    DRAM_ADDR <= 13'b00;
+
+
+                    valid <= 1'b0;
+            end
+
+            REFRESH_IDLE: begin
+                    DRAM_CKE <= 1'b1;
+                    DRAM_CS_N <= 1'b0;
+                    DRAM_RAS_N <= 1'b1;
+                    DRAM_CAS_N <= 1'b1;
+                    DRAM_WE_N <= 1'b1;
+                    DRAM_LDQM <= 1'b0;
+                    DRAM_UDQM <= 1'b0;
+
+                    DRAM_BA <= 2'b00;
+                    DRAM_ADDR <= 13'b00;
+
+
+                    valid <= 1'b0;
+            end
 
             // THIS MAY NEED TO BE CHANGED -- self refresh?
             IDLE: begin // NOP
