@@ -63,7 +63,7 @@ module memory_controller(
 
     // Define STATES for execution
     typedef enum logic [24:0] {
-	    RESET = 	        25'b0000000000000000000000001,
+	RESET =  	        25'b0000000000000000000000001,
         RESET_NOP0 =        25'b0000000000000000000000010,
         RESET_PRECHARGE =   25'b0000000000000000000000100,
         RESET_REF0 =        25'b0000000000000000000001000,

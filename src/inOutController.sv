@@ -60,7 +60,7 @@ module inOutControl (
     // ADVANCE NEXT STATE
     always_ff @(posedge clk)
     begin
-        if(key0_debounce == 1'b1 && key1_debounce == 1'b1) begin
+        if(key0_debounce === 1'b1 && key1_debounce === 1'b1) begin
             STATE <= RESET;
 		  end
         else 

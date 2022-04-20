@@ -24,21 +24,27 @@
 
 
 
-module memory_controller_tb;
+module top_level_memory_controller_tb;
     timeunit 1ns;
     timeprecision 100ps;
     realtime delay=2.5ns;
     //INPUTS
-    bit clk;
+    bit             clk;
+    logic           key0;
+    logic           key1;
+    logic           key0_debounce;
+    logic           key1_debounce;
+    logic   [8:0]   switches;
+    logic   [1:0]   modeOutput;
+    logic   [1:0]   cmd;
+    logic   [24:0]  addr;
+    wire    [15:0]  dq;
+    logic   [15:0]  dq_data;
+    logic           ready;
+    logic           rst;
+    logic           valid;
 
-    logic [1:0] cmd;
-    logic [24:0] addr;
-    wire [15:0] dq;
-    logic [15:0] dq_data;
-    logic ready;
-    logic rst;
-    logic valid;
-
+    
     /** Interface to SDRAM CHIP **/
     // Address/Data
     logic [12:0] DRAM_ADDR;
@@ -62,17 +68,34 @@ module memory_controller_tb;
 // test RESET, WRITE, READ
 
     initial begin
+        switches <= 9'b000000011;
+        #6;
         // prepare reset command
-        rst <= 1'b1;
-        cmd <= 2'b10;
-        addr <= 25'h0FFFF;
-        ready <= 1'b0;
-
-        #5 rst <= 1'b0;
-
+        {key0_debounce,key1_debounce} <= 2'b11;
+        #6;
+        {key0_debounce,key1_debounce} <= 2'b00;
         // submit reset command
+        key0 <= 1;
+        #6 key0 <= 0;
         #70;
-        
+        key0 <= 1;
+        #6 key0 <= 0;
+        key1 <= 1;
+        #6 key1 <= 0;
+        key1 <= 1;
+        #6 key1 <= 0;
+        #70;
+        key1 <= 1;
+        #6 key1 <= 0;
+        // #70;
+
+        // key0 <= 1;
+        // #6 key0 <= 0;
+        // key1 <= 1;
+        // #6 key1 <= 0;
+        // #70;
+
+        /*
         // prepare write command
         rst <= 1'b0;
         cmd <= 2'b10;
@@ -96,7 +119,7 @@ module memory_controller_tb;
         #6;
         ready <= 1'b0;
 
-        #30;
+        #30;*/
 
     end
    
@@ -105,7 +128,22 @@ module memory_controller_tb;
     end
 
 
-// Test For writeCmd ********************************
+    inOutControl ioControl(
+        .clk            (clk),
+        .key0_debounce  (key0_debounce),
+        .key1_debounce  (key1_debounce),
+        .key0_pulse     (key0),
+        .key1_pulse     (key1),
+        .sw             (switches),
+        .memDone        (valid),
+        .read_data      (dq),
+	 
+        .modeOutput     (cmd), //mem
+        .memoryAddress  (addr), // memory
+        .write_data     (dq), // memory
+        .ioDone         (ready),    //ioDone
+	    .reset_out      (rst)
+    );
 
     memory_controller uut (
         .clk(clk),
@@ -113,6 +151,7 @@ module memory_controller_tb;
         .addr(addr),
         .dq(dq),
         .ready(ready),
+        
         .rst(rst),
         .valid(valid),
 
