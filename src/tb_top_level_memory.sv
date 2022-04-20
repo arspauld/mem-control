@@ -38,8 +38,9 @@ module top_level_memory_controller_tb;
     logic   [1:0]   modeOutput;
     logic   [1:0]   cmd;
     logic   [24:0]  addr;
-    wire    [15:0]  dq;
-    logic   [15:0]  dq_data;
+    wire	[15:0]	dq;	//goes into the controller
+    logic	[15:0]	dq_data;
+    logic	[15:0] 	dqOutput;
     logic           ready;
     logic           rst;
     logic           valid;
@@ -84,7 +85,11 @@ module top_level_memory_controller_tb;
         #6 key1 <= 0;
         key1 <= 1;
         #6 key1 <= 0;
-        #70;
+        key1 <= 1;
+        #6 key1 <= 0;
+        key1 <= 1;
+        #6 key1 <= 0;
+        #60;
         key1 <= 1;
         #6 key1 <= 0;
         // #70;
@@ -140,7 +145,7 @@ module top_level_memory_controller_tb;
 	 
         .modeOutput     (cmd), //mem
         .memoryAddress  (addr), // memory
-        .write_data     (dq), // memory
+        .write_data     (dq_data), // memory
         .ioDone         (ready),    //ioDone
 	    .reset_out      (rst)
     );
@@ -169,6 +174,17 @@ module top_level_memory_controller_tb;
         .DRAM_CS_N(DRAM_CS_N)
     );
 
-
+    mt48lc32m16a2 memory(
+		.Dq		(DRAM_DQ),
+		.Addr	(DRAM_ADDR),
+		.Ba		(DRAM_BA),
+		.Clk	(DRAM_CLK),
+		.Cke	(DRAM_CKE),
+		.Cs_n	(DRAM_CS_N),
+		.Ras_n	(DRAM_RAS_N),
+		.Cas_n	(DRAM_CAS_N),
+		.We_n	(DRAM_WE_N),
+		.Dqm    ({DRAM_LDQM, DRAM_UDQM})
+	);
 
 endmodule

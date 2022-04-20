@@ -128,19 +128,19 @@ module TopLevel(
 //=======================================================
 
 logic	[1:0]		stage;
-logic	[15:0]	valToShow;
-logic [3:0]		debouncedSwitches;
+logic	[15:0]		valToShow;
+logic 	[3:0]		debouncedSwitches;
 logic				key0Pressed;
 logic				key1Pressed;
-logic [1:0]		buttons;
+logic 	[1:0]		buttons;
 logic				memDone;
-logic [15:0]	memDataIn;
-logic [1:0] 	memCmd;    
+logic 	[15:0]		memDataIn;
+logic 	[1:0] 		memCmd;    
 
-logic [24:0] 	memAddrOut; 
-logic 			ioDone;     
-logic [31:0] 	dispData;
-logic [1:0]		modeSelect;
+logic 	[24:0] 		memAddrOut; 
+logic 				ioDone;     
+logic 	[31:0] 		dispData;
+logic 	[1:0]		modeSelect;
 //inout net
 wire	[15:0]	dq;	//goes into the controller
 logic	[15:0]	dqInput;
@@ -213,22 +213,22 @@ assign LEDR[8:0] = SW[8:0];
 
 
 inOutControl inputController(
-    .clk					(MAX10_CLK1_50),
+    .clk			(MAX10_CLK1_50),
     .key0_pulse		(pulse0),
     .key1_pulse		(pulse1),
-	 .key0_debounce	(key0Pressed),
-	 .key1_debounce	(key1Pressed),
-    .sw					(debouncedSwitches),
-    .memDone			(memDone),
-	 .read_data			(dqInput),
+	.key0_debounce	(key0Pressed),
+	.key1_debounce	(key1Pressed),
+    .sw				(debouncedSwitches),
+    .memDone		(memDone),
+	.read_data		(dqInput),
 
     .modeOutput		(modeSelect), 	//hex
     .memoryAddress	(memAddrOut), 					// memory
     .write_data		(dqOutput), 	// memory
-    .displayData		(valToShow), 	//hex
-    .ioDone     		(ioDone),
-	 .out_state			(state),
-	 .reset_out			(reset)
+    .displayData	(valToShow), 	//hex
+    .ioDone     	(ioDone),
+	.out_state		(state),
+	.reset_out		(reset)
 );
 
 assign dq = modeSelect == 2'b10 ? dqOutput : 16'bz;
@@ -236,12 +236,12 @@ assign dqInput = dq;
 assign LEDR[9] = ioDone;
 
 memory_controller memController(
-    .clk			(MAX10_CLK1_50),
-    .cmd			(modeSelect),
+    .clk		(MAX10_CLK1_50),
+    .cmd		(modeSelect),
     .addr		(memAddrOut),
     .dq			(dq),
     .ready		(ioDone),
-    .rst			(reset),
+    .rst		(reset),
     .valid		(memDone),
 
     .DRAM_ADDR	(DRAM_ADDR),
@@ -250,14 +250,12 @@ memory_controller memController(
 
     .DRAM_LDQM	(DRAM_LDQM),
     .DRAM_UDQM	(DRAM_UDQM),
-    .DRAM_RAS_N(DRAM_RAS_N),
-    .DRAM_CAS_N(DRAM_CAS_N),
+    .DRAM_RAS_N	(DRAM_RAS_N),
+    .DRAM_CAS_N	(DRAM_CAS_N),
     .DRAM_CKE	(DRAM_CKE),
     .DRAM_CLK	(DRAM_CLK),
     .DRAM_WE_N	(DRAM_WE_N),
     .DRAM_CS_N	(DRAM_CS_N)
-	 );
-
-
+);
 
 endmodule
