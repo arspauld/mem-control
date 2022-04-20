@@ -63,36 +63,37 @@ module memory_controller(
 
     // Define STATES for execution
     typedef enum logic [26:0] {
-	    RESET =  	        27'b000000000000000000000000001,
-        RESET_NOP0 =        27'b000000000000000000000000010,
-        RESET_PRECHARGE =   27'b000000000000000000000000100,
-        RESET_NOP1 =        27'b000000000000000000000001000,
-        RESET_REF0 =        27'b000000000000000000000010000,
-        RESET_NOP2 =        27'b000000000000000000000100000,
-        RESET_REF1 =        27'b000000000000000000001000000,
-        RESET_NOP3 =        27'b000000000000000000010000000,
-        RESET_LOAD =        27'b000000000000000000100000000,
-        RESET_NOP4 =        27'b000000000000000001000000000,
+	    RESET =  	        28'b0000000000000000000000000001,
+        RESET_NOP0 =        28'b0000000000000000000000000010,
+        RESET_PRECHARGE =   28'b0000000000000000000000000100,
+        RESET_NOP1 =        28'b0000000000000000000000001000,
+        RESET_REF0 =        28'b0000000000000000000000010000,
+        RESET_NOP2 =        28'b0000000000000000000000100000,
+        RESET_NOP3 =        28'b0000000000000000000001000000,
+        RESET_REF1 =        28'b0000000000000000000010000000,
+        RESET_NOP4 =        28'b0000000000000000000100000000,
+        RESET_LOAD =        28'b0000000000000000001000000000,
+        RESET_NOP5 =        28'b0000000000000000010000000000,
 
-        READ_INITIAL =      27'b000000000000000010000000000,
-        READ_ACTIVE =       27'b000000000000000100000000000,
-        READ_CMD =          27'b000000000000001000000000000,
-        READ_NOP =          27'b000000000000010000000000000,
-        READ_DATA =         27'b000000000000100000000000000,
-        WRITE_INITIAL =     27'b000000000001000000000000000,
-        WRITE_ACTIVE =      27'b000000000010000000000000000,
-        WRITE_CMD =         27'b000000000100000000000000000,
-        WRITE_NOP =         27'b000000001000000000000000000,
+        READ_INITIAL =      28'b0000000000000000100000000000,
+        READ_ACTIVE =       28'b0000000000000001000000000000,
+        READ_CMD =          28'b0000000000000010000000000000,
+        READ_NOP =          28'b0000000000000100000000000000,
+        READ_DATA =         28'b0000000000001000000000000000,
+        WRITE_INITIAL =     28'b0000000000010000000000000000,
+        WRITE_ACTIVE =      28'b0000000000100000000000000000,
+        WRITE_CMD =         28'b0000000001000000000000000000,
+        WRITE_NOP =         28'b0000000010000000000000000000,
 
-        REFRESH_INITIAL =   27'b000000010000000000000000000,
-        REFRESH_PRECHARGE = 27'b000000100000000000000000000,
-        REFRESH_NOP0 =      27'b000001000000000000000000000,
-        REFRESH_AUTO =      27'b000010000000000000000000000,
-        REFRESH_NOP1 =      27'b000100000000000000000000000,
-        REFRESH_NOP2 =      27'b001000000000000000000000000,
-        REFRESH_IDLE =      27'b010000000000000000000000000,
+        REFRESH_INITIAL =   28'b0000000100000000000000000000,
+        REFRESH_PRECHARGE = 28'b0000001000000000000000000000,
+        REFRESH_NOP0 =      28'b0000010000000000000000000000,
+        REFRESH_AUTO =      28'b0000100000000000000000000000,
+        REFRESH_NOP1 =      28'b0001000000000000000000000000,
+        REFRESH_NOP2 =      28'b0010000000000000000000000000,
+        REFRESH_IDLE =      28'b0100000000000000000000000000,
 
-        IDLE =              27'b100000000000000000000000000
+        IDLE =              28'b1000000000000000000000000000
 
 	} statetype;
 
@@ -125,11 +126,12 @@ module memory_controller(
             RESET_PRECHARGE:    NEXT_STATE <= RESET_NOP1;
             RESET_NOP1 :        NEXT_STATE <= RESET_REF0;
             RESET_REF0:         NEXT_STATE <= RESET_NOP2;
-            RESET_NOP2:         NEXT_STATE <= RESET_REF1;
+            RESET_NOP2:         NEXT_STATE <= RESET_NOP3;
+            RESET_NOP3:         NEXT_STATE <= RESET_REF1;
             RESET_REF1:         NEXT_STATE <= RESET_NOP3;
-            RESET_NOP3:         NEXT_STATE <= RESET_LOAD;
+            RESET_NOP4:         NEXT_STATE <= RESET_LOAD;
             RESET_LOAD:         NEXT_STATE <= RESET_NOP4;
-            RESET_NOP4:         NEXT_STATE <= IDLE;
+            RESET_NOP5:         NEXT_STATE <= IDLE;
 
             READ_INITIAL:       NEXT_STATE <= READ_ACTIVE;
             READ_ACTIVE:        NEXT_STATE <= READ_CMD;
@@ -216,7 +218,7 @@ module memory_controller(
                     DRAM_UDQM <= 1'b1;
 
                     DRAM_BA <= 2'b00;
-                    DRAM_ADDR <= {2'b00, 1'b1, 9'b0};
+                    DRAM_ADDR <= {2'b00, 1'b1, 10'b0};
 
                     valid <= 1'b0;
             end
@@ -267,6 +269,21 @@ module memory_controller(
                     valid <= 1'b0;
             end
 
+            RESET_NOP3: begin
+                    DRAM_CKE <= 1'b1;
+                    DRAM_CS_N <= 1'b0;
+                    DRAM_RAS_N <= 1'b1;
+                    DRAM_CAS_N <= 1'b1;
+                    DRAM_WE_N <= 1'b1;
+                    DRAM_LDQM <= 1'b1;
+                    DRAM_UDQM <= 1'b1;
+
+                    DRAM_BA <= 2'b00;
+                    DRAM_ADDR <= 13'b00;
+
+                    valid <= 1'b0;
+            end
+
             RESET_REF1: begin
                     DRAM_CKE <= 1'b1;
                     DRAM_CS_N <= 1'b0;
@@ -282,7 +299,7 @@ module memory_controller(
                     valid <= 1'b0;
             end
 
-            RESET_NOP3: begin
+            RESET_NOP4: begin
                     DRAM_CKE <= 1'b1;
                     DRAM_CS_N <= 1'b0;
                     DRAM_RAS_N <= 1'b1;
@@ -312,7 +329,7 @@ module memory_controller(
                     valid <= 1'b0;
             end
 
-            RESET_NOP4: begin
+            RESET_NOP5: begin
                     DRAM_CKE <= 1'b1;
                     DRAM_CS_N <= 1'b0;
                     DRAM_RAS_N <= 1'b1;
@@ -489,7 +506,7 @@ module memory_controller(
                     DRAM_UDQM <= 1'b1;
 
                     DRAM_BA <= 2'b00;
-                    DRAM_ADDR <= {2'b00, 1'b1, 9'b0};
+                    DRAM_ADDR <= {2'b00, 1'b1, 10'b0};
 
                     valid <= 1'b0;
             end
