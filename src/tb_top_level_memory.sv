@@ -70,10 +70,10 @@ module top_level_memory_controller_tb;
 
     initial begin
         switches <= 9'b000000011;
-        #6;
+        #21;
         // prepare reset command
         {key0_debounce,key1_debounce} <= 2'b11;
-        #6;
+        #21;
         {key0_debounce,key1_debounce} <= 2'b00;
         // submit reset command
         key0 <= 1;
