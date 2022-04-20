@@ -216,7 +216,7 @@ module memory_controller(
                     DRAM_UDQM <= 1'b1;
 
                     DRAM_BA <= 2'b00;
-                    DRAM_ADDR <= {2'b00, 1'b1, 9'b0};
+                    DRAM_ADDR <= {2'b00, 1'b1, 10'b0};
 
                     valid <= 1'b0;
             end
@@ -489,7 +489,7 @@ module memory_controller(
                     DRAM_UDQM <= 1'b1;
 
                     DRAM_BA <= 2'b00;
-                    DRAM_ADDR <= {2'b00, 1'b1, 9'b0};
+                    DRAM_ADDR <= {2'b00, 1'b1, 10'b0};
 
                     valid <= 1'b0;
             end
