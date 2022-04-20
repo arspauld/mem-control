@@ -27,7 +27,7 @@
 module top_level_memory_controller_tb;
     timeunit 1ns;
     timeprecision 100ps;
-    realtime delay=2.5ns;
+    realtime delay=10ns;
     //INPUTS
     bit             clk;
     logic           key0;
@@ -77,27 +77,27 @@ module top_level_memory_controller_tb;
         {key0_debounce,key1_debounce} <= 2'b00;
         // submit reset command
         key0 <= 1;
-        #6 key0 <= 0;
-        #70;
+        #21 key0 <= 0;
+        #200;
         key0 <= 1;
-        #6 key0 <= 0;
+        #21 key0 <= 0;
         key1 <= 1;
-        #6 key1 <= 0;
+        #21 key1 <= 0;
         key1 <= 1;
-        #6 key1 <= 0;
+        #21 key1 <= 0;
         key1 <= 1;
-        #6 key1 <= 0;
+        #21 key1 <= 0;
         key1 <= 1;
-        #6 key1 <= 0;
-        #60;
+        #21 key1 <= 0;
+        #200;
         key1 <= 1;
-        #6 key1 <= 0;
+        #21 key1 <= 0;
         // #70;
 
         // key0 <= 1;
-        // #6 key0 <= 0;
+        // #21 key0 <= 0;
         // key1 <= 1;
-        // #6 key1 <= 0;
+        // #21 key1 <= 0;
         // #70;
 
         /*
@@ -184,7 +184,7 @@ module top_level_memory_controller_tb;
 		.Ras_n	(DRAM_RAS_N),
 		.Cas_n	(DRAM_CAS_N),
 		.We_n	(DRAM_WE_N),
-		.Dqm    ({DRAM_LDQM, DRAM_UDQM})
+		.Dqm    ({DRAM_UDQM, DRAM_LDQM})
 	);
 
 endmodule

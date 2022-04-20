@@ -59,38 +59,40 @@ module memory_controller(
     output logic DRAM_CS_N;
 
     // Autorefresh counter
-    logic [5:0] refresh_count;
+    logic [6:0] refresh_count;
 
     // Define STATES for execution
-    typedef enum logic [24:0] {
-	RESET =  	        25'b0000000000000000000000001,
-        RESET_NOP0 =        25'b0000000000000000000000010,
-        RESET_PRECHARGE =   25'b0000000000000000000000100,
-        RESET_REF0 =        25'b0000000000000000000001000,
-        RESET_NOP1 =        25'b0000000000000000000010000,
-        RESET_REF1 =        25'b0000000000000000000100000,
-        RESET_NOP2 =        25'b0000000000000000001000000,
-        RESET_LOAD =        25'b0000000000000000010000000,
-        RESET_NOP3 =        25'b0000000000000000100000000,
+    typedef enum logic [26:0] {
+	    RESET =  	        27'b000000000000000000000000001,
+        RESET_NOP0 =        27'b000000000000000000000000010,
+        RESET_PRECHARGE =   27'b000000000000000000000000100,
+        RESET_NOP1 =        27'b000000000000000000000001000,
+        RESET_REF0 =        27'b000000000000000000000010000,
+        RESET_NOP2 =        27'b000000000000000000000100000,
+        RESET_REF1 =        27'b000000000000000000001000000,
+        RESET_NOP3 =        27'b000000000000000000010000000,
+        RESET_LOAD =        27'b000000000000000000100000000,
+        RESET_NOP4 =        27'b000000000000000001000000000,
 
-        READ_INITIAL =      25'b0000000000000001000000000,
-        READ_ACTIVE =       25'b0000000000000010000000000,
-        READ_CMD =          25'b0000000000000100000000000,
-        READ_NOP =          25'b0000000000001000000000000,
-        READ_DATA =         25'b0000000000010000000000000,
-        WRITE_INITIAL =     25'b0000000000100000000000000,
-        WRITE_ACTIVE =      25'b0000000001000000000000000,
-        WRITE_CMD =         25'b0000000010000000000000000,
-        WRITE_NOP =         25'b0000000100000000000000000,
+        READ_INITIAL =      27'b000000000000000010000000000,
+        READ_ACTIVE =       27'b000000000000000100000000000,
+        READ_CMD =          27'b000000000000001000000000000,
+        READ_NOP =          27'b000000000000010000000000000,
+        READ_DATA =         27'b000000000000100000000000000,
+        WRITE_INITIAL =     27'b000000000001000000000000000,
+        WRITE_ACTIVE =      27'b000000000010000000000000000,
+        WRITE_CMD =         27'b000000000100000000000000000,
+        WRITE_NOP =         27'b000000001000000000000000000,
 
-        REFRESH_INITIAL =   25'b0000001000000000000000000,
-        REFRESH_NOP0 =      25'b0000010000000000000000000,
-        REFRESH_AUTO =      25'b0000100000000000000000000,
-        REFRESH_NOP1 =      25'b0001000000000000000000000,
-        REFRESH_NOP2 =      25'b0010000000000000000000000,
-        REFRESH_IDLE =      25'b0100000000000000000000000,
+        REFRESH_INITIAL =   27'b000000010000000000000000000,
+        REFRESH_PRECHARGE = 27'b000000100000000000000000000,
+        REFRESH_NOP0 =      27'b000001000000000000000000000,
+        REFRESH_AUTO =      27'b000010000000000000000000000,
+        REFRESH_NOP1 =      27'b000100000000000000000000000,
+        REFRESH_NOP2 =      27'b001000000000000000000000000,
+        REFRESH_IDLE =      27'b010000000000000000000000000,
 
-        IDLE =              25'b1000000000000000000000000
+        IDLE =              27'b100000000000000000000000000
 
 	} statetype;
 
@@ -108,7 +110,7 @@ module memory_controller(
             if(STATE == IDLE)
                 refresh_count <= refresh_count - 1;
             else
-                refresh_count <= 6'd32;
+                refresh_count <= 7'd128;
                 
             STATE <= NEXT_STATE;
         end
@@ -120,13 +122,14 @@ module memory_controller(
         case(STATE)
             RESET:              NEXT_STATE <= RESET_NOP0;
             RESET_NOP0:         NEXT_STATE <= RESET_PRECHARGE;
-            RESET_PRECHARGE:    NEXT_STATE <= RESET_REF0;
-            RESET_REF0:         NEXT_STATE <= RESET_NOP1;
-            RESET_NOP1:         NEXT_STATE <= RESET_REF1;
-            RESET_REF1:         NEXT_STATE <= RESET_NOP2;
-            RESET_NOP2:         NEXT_STATE <= RESET_LOAD;
-            RESET_LOAD:         NEXT_STATE <= RESET_NOP3;
-            RESET_NOP3:         NEXT_STATE <= IDLE;
+            RESET_PRECHARGE:    NEXT_STATE <= RESET_NOP1;
+            RESET_NOP1 :        NEXT_STATE <= RESET_REF0;
+            RESET_REF0:         NEXT_STATE <= RESET_NOP2;
+            RESET_NOP2:         NEXT_STATE <= RESET_REF1;
+            RESET_REF1:         NEXT_STATE <= RESET_NOP3;
+            RESET_NOP3:         NEXT_STATE <= RESET_LOAD;
+            RESET_LOAD:         NEXT_STATE <= RESET_NOP4;
+            RESET_NOP4:         NEXT_STATE <= IDLE;
 
             READ_INITIAL:       NEXT_STATE <= READ_ACTIVE;
             READ_ACTIVE:        NEXT_STATE <= READ_CMD;
@@ -139,7 +142,8 @@ module memory_controller(
             WRITE_CMD:          NEXT_STATE <= WRITE_NOP;
             WRITE_NOP:          NEXT_STATE <= IDLE;
 
-            REFRESH_INITIAL:    NEXT_STATE <= REFRESH_NOP0;
+            REFRESH_INITIAL:    NEXT_STATE <= REFRESH_PRECHARGE;
+            REFRESH_PRECHARGE:  NEXT_STATE <= REFRESH_NOP0;
             REFRESH_NOP0:       NEXT_STATE <= REFRESH_AUTO;
             REFRESH_AUTO:       NEXT_STATE <= REFRESH_NOP1;
             REFRESH_NOP1:       NEXT_STATE <= REFRESH_NOP2;
@@ -217,6 +221,21 @@ module memory_controller(
                     valid <= 1'b0;
             end
 
+            RESET_NOP1: begin
+                    DRAM_CKE <= 1'b1;
+                    DRAM_CS_N <= 1'b0;
+                    DRAM_RAS_N <= 1'b1;
+                    DRAM_CAS_N <= 1'b1;
+                    DRAM_WE_N <= 1'b1;
+                    DRAM_LDQM <= 1'b1;
+                    DRAM_UDQM <= 1'b1;
+
+                    DRAM_BA <= 2'b00;
+                    DRAM_ADDR <= 13'b00;
+
+                    valid <= 1'b0;
+            end
+
             RESET_REF0: begin
                     DRAM_CKE <= 1'b1;
                     DRAM_CS_N <= 1'b0;
@@ -233,7 +252,7 @@ module memory_controller(
                 
             end
 
-            RESET_NOP1: begin
+            RESET_NOP2: begin
                     DRAM_CKE <= 1'b1;
                     DRAM_CS_N <= 1'b0;
                     DRAM_RAS_N <= 1'b1;
@@ -263,7 +282,7 @@ module memory_controller(
                     valid <= 1'b0;
             end
 
-            RESET_NOP2: begin
+            RESET_NOP3: begin
                     DRAM_CKE <= 1'b1;
                     DRAM_CS_N <= 1'b0;
                     DRAM_RAS_N <= 1'b1;
@@ -293,7 +312,7 @@ module memory_controller(
                     valid <= 1'b0;
             end
 
-            RESET_NOP3: begin
+            RESET_NOP4: begin
                     DRAM_CKE <= 1'b1;
                     DRAM_CS_N <= 1'b0;
                     DRAM_RAS_N <= 1'b1;
@@ -456,6 +475,21 @@ module memory_controller(
 
                     DRAM_BA <= 2'b00;
                     DRAM_ADDR <= 13'b00;
+
+                    valid <= 1'b0;
+            end
+
+            REFRESH_PRECHARGE: begin
+                    DRAM_CKE <= 1'b1;
+                    DRAM_CS_N <= 1'b0;
+                    DRAM_RAS_N <= 1'b0;
+                    DRAM_CAS_N <= 1'b1;
+                    DRAM_WE_N <= 1'b0;
+                    DRAM_LDQM <= 1'b1;
+                    DRAM_UDQM <= 1'b1;
+
+                    DRAM_BA <= 2'b00;
+                    DRAM_ADDR <= {2'b00, 1'b1, 9'b0};
 
                     valid <= 1'b0;
             end
