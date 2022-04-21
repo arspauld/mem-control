@@ -143,14 +143,15 @@ logic 	[31:0] 		dispData;
 logic 	[1:0]		modeSelect;
 //inout net
 wire	[15:0]	dq;	//goes into the controller
-logic	[15:0]	dqInput;
-logic	[15:0] 	dqOutput;
+logic	[15:0]	dq_data;
 
 logic pulse0;
 logic pulse1;
 
 logic [12:0] state;
 logic			 reset;
+
+
 
 
 //=======================================================
@@ -213,49 +214,50 @@ assign LEDR[8:0] = SW[8:0];
 
 
 inOutControl inputController(
-    .clk			(MAX10_CLK1_50),
-    .key0_pulse		(pulse0),
-    .key1_pulse		(pulse1),
-	.key0_debounce	(key0Pressed),
-	.key1_debounce	(key1Pressed),
-    .sw				(debouncedSwitches),
-    .memDone		(memDone),
-	.read_data		(dqInput),
+   .clk					(MAX10_CLK1_50),
+   .key0_pulse			(pulse0),
+   .key1_pulse			(pulse1),
+	.key0_debounce		(key0Pressed),
+	.key1_debounce		(key1Pressed),
+   .sw					(debouncedSwitches),
+   .memDone				(memDone),
+	.read_data			(dq),
 
     .modeOutput		(modeSelect), 	//hex
     .memoryAddress	(memAddrOut), 					// memory
-    .write_data		(dqOutput), 	// memory
-    .displayData	(valToShow), 	//hex
-    .ioDone     	(ioDone),
-	.out_state		(state),
-	.reset_out		(reset)
+    .write_data		(dq_data), 	// memory
+    .displayData		(valToShow), 	//hex
+    .ioDone     		(ioDone),
+	.out_state			(state),
+	.reset_out			(reset)
 );
 
-assign dq = modeSelect == 2'b10 ? dqOutput : 16'bz;
-assign dqInput = dq;
-assign LEDR[9] = ioDone;
+//assign dq[15:0] =       modeSelect == 2'b01 ? DRAM_DQ[15:0] : dq_data[15:0];
+//assign DRAM_DQ[15:0] =  modeSelect == 2'b01 ? 16'hFFFF : dq[15:0];
+//assign dq = modeSelect == 2'b01 ? DRAM_DQ :  dq_data;
 
 memory_controller memController(
-    .clk		(MAX10_CLK1_50),
-    .cmd		(modeSelect),
+    .clk			(MAX10_CLK1_50),
+    .cmd			(modeSelect),
     .addr		(memAddrOut),
-    .dq			(dq),
+    .wr_dq			(dq_data),
+	.rd_dq			(dq),
     .ready		(ioDone),
-    .rst		(reset),
+    .rst			(reset),
     .valid		(memDone),
 
     .DRAM_ADDR	(DRAM_ADDR),
     .DRAM_BA	(DRAM_BA),
     .DRAM_DQ	(DRAM_DQ),
 
-    .DRAM_LDQM	(DRAM_LDQM),
-    .DRAM_UDQM	(DRAM_UDQM),
+    .DRAM_LDQM		(DRAM_LDQM),
+    .DRAM_UDQM		(DRAM_UDQM),
     .DRAM_RAS_N	(DRAM_RAS_N),
     .DRAM_CAS_N	(DRAM_CAS_N),
-    .DRAM_CKE	(DRAM_CKE),
-    .DRAM_CLK	(DRAM_CLK),
-    .DRAM_WE_N	(DRAM_WE_N),
-    .DRAM_CS_N	(DRAM_CS_N)
+    .DRAM_CKE		(DRAM_CKE),
+    .DRAM_CLK		(DRAM_CLK),
+    .DRAM_WE_N		(DRAM_WE_N),
+    .DRAM_CS_N		(DRAM_CS_N)
 );
 
 endmodule

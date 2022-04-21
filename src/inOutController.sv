@@ -35,6 +35,8 @@ module inOutControl (
     output  logic [12:0]  out_state;
 	 output 	logic			  reset_out;
 
+    logic [15:0] realDisplay;
+
         // Define STATES for execution
     typedef enum logic [12:0] {
         RESET =      13'b0000000000001,
@@ -70,12 +72,14 @@ module inOutControl (
                     STATE <= IDLE;
                     memoryAddress <= 25'b0;
                     write_data <= 16'b0;
+                    displayData <= displayData;
 						  
                 end
                 else begin
                     STATE <= RESET;
                     memoryAddress <= 25'b0;
                     write_data <= 16'b0;
+                    displayData <= displayData;
                 end
             end
             IDLE: begin
@@ -83,12 +87,13 @@ module inOutControl (
                     STATE <= READ_ST0;
                     memoryAddress <= 25'b0;
                     write_data <= 16'b0;
-						  
+                    displayData <= displayData;						  
                 end
                 else begin
                     STATE <= IDLE;
                     memoryAddress <= 25'b0;
                     write_data <= 16'b0;
+                    displayData <= displayData;
                 end
             end
 
@@ -97,16 +102,19 @@ module inOutControl (
                     STATE <= WRITE_ST0;
                     memoryAddress <= 25'b0;
                     write_data <= 16'b0;
+                    displayData <= displayData;
                 end
                 else if(key1_pulse) begin
                     STATE <= READ_ST1;
                     memoryAddress [7:0] <= sw[7:0];
                     write_data <= 16'b0;
+                    displayData <= displayData;
                 end
                 else begin
                     STATE <= READ_ST0;
                     memoryAddress <= memoryAddress;
                     write_data <= write_data;
+                    displayData <= displayData;
                 end
             end
             READ_ST1: begin
@@ -114,16 +122,19 @@ module inOutControl (
                     STATE <= READ_ST1;
                     memoryAddress <= memoryAddress;
                     write_data <= write_data;
+                    displayData <= displayData;
                 end
                 else if(key1_pulse) begin
                     STATE <= READ_ST2;
                     memoryAddress [15:8] <= sw[7:0];
                     write_data <= 16'b0;
+                    displayData <= displayData;
                 end
                 else begin
                     STATE <= READ_ST1;
                     memoryAddress <= memoryAddress;
                     write_data <= write_data;
+                    displayData <= displayData;
                 end
             end
             READ_ST2: begin
@@ -131,16 +142,19 @@ module inOutControl (
                     STATE <= READ_ST2;
                     memoryAddress <= memoryAddress;
                     write_data <= write_data;
+                    displayData <= displayData;
                 end
                 else if(key1_pulse) begin
                     STATE <= READ_WAIT;
                     memoryAddress [24:16] <= sw[8:0];
                     write_data <= 16'b0;
+                    displayData <= displayData;
                 end
                 else begin
                     STATE <= READ_ST2;
                     memoryAddress <= memoryAddress;
                     write_data <= write_data;
+                    displayData <= displayData;
                 end
             end
             READ_WAIT: begin
@@ -148,11 +162,13 @@ module inOutControl (
                     STATE <= READ_DONE;
                     memoryAddress <= memoryAddress;
                     write_data <= write_data;
+                    displayData <= read_data;
                 end
                 else begin
                     STATE <= READ_WAIT;
                     memoryAddress <= memoryAddress;
                     write_data <= write_data;
+                    displayData <= displayData;
                 end
             end
             READ_DONE: begin
@@ -160,11 +176,13 @@ module inOutControl (
                     STATE <= IDLE;
                     memoryAddress <= 25'b0;
                     write_data <= 16'b0;
+                    displayData <= displayData;
                 end
                 else begin
                     STATE <= READ_DONE;
                     memoryAddress <= memoryAddress;
                     write_data <= write_data;
+                    displayData <= displayData;
                 end
             end
 
@@ -173,16 +191,19 @@ module inOutControl (
                     STATE <= READ_ST0;
                     memoryAddress <= 25'b0;
                     write_data <= 16'b0;
+                    displayData <= displayData;
                 end
                 else if(key1_pulse) begin
                     STATE <= WRITE_ST1;
                     memoryAddress [7:0] <= sw[7:0];
                     write_data <= 16'b0;
+                    displayData <= displayData;
                 end
                 else begin
                     STATE <= WRITE_ST0;
                     memoryAddress <= memoryAddress;
                     write_data <= write_data;
+                    displayData <= displayData;
                 end
             end
             WRITE_ST1: begin
@@ -190,16 +211,19 @@ module inOutControl (
                     STATE <= WRITE_ST1;
                     memoryAddress <= memoryAddress;
                     write_data <= 16'b0;
+                    displayData <= displayData;
                 end
                 else if(key1_pulse) begin
                     STATE <= WRITE_ST2;
                     memoryAddress [15:8] <= sw[7:0];
                     write_data <= 16'b0;
+                    displayData <= displayData;
                 end
                 else begin
                     STATE <= WRITE_ST1;
                     memoryAddress <= memoryAddress;
                     write_data <= write_data;
+                    displayData <= displayData;
                 end
             end
             WRITE_ST2: begin
@@ -207,16 +231,19 @@ module inOutControl (
                     STATE <= WRITE_ST2;
                     memoryAddress <= memoryAddress;
                     write_data <= 16'b0;
+                    displayData <= displayData;
                 end
                 else if(key1_pulse) begin
                     STATE <= WRITE_ST3;
                     memoryAddress [24:16] <= sw[8:0];
                     write_data <= 16'b0;
+                    displayData <= displayData;
                 end
                 else begin
                     STATE <= WRITE_ST2;
                     memoryAddress <= memoryAddress;
                     write_data <= write_data;
+                    displayData <= displayData;
                 end
             end
             WRITE_ST3: begin
@@ -224,16 +251,19 @@ module inOutControl (
                     STATE <= WRITE_ST3;
                     memoryAddress <= memoryAddress;
                     write_data <= write_data;
+                    displayData <= displayData;
                 end
                 else if(key1_pulse) begin
                     STATE <= WRITE_ST4;
                     memoryAddress <= memoryAddress;
                     write_data [7:0] <= sw[7:0];
+                    displayData <= displayData;
                 end
                 else begin
                     STATE <= WRITE_ST3;
                     memoryAddress <= memoryAddress;
                     write_data <= write_data;
+                    displayData <= displayData;
                 end
             end
             WRITE_ST4: begin
@@ -241,16 +271,19 @@ module inOutControl (
                     STATE <= WRITE_ST4;
                     memoryAddress <= memoryAddress;
                     write_data <= write_data;
+                    displayData <= displayData;
                 end
                 else if(key1_pulse) begin
                     STATE <= WRITE_WAIT;
                     memoryAddress <= memoryAddress;
                     write_data [15:8] <= sw[7:0];
+                    displayData <= displayData;
                 end
                 else begin
                     STATE <= WRITE_ST4;
                     memoryAddress <= memoryAddress;
                     write_data <= write_data;
+                    displayData <= displayData;
                 end
             end
             WRITE_WAIT: begin
@@ -258,11 +291,13 @@ module inOutControl (
                     STATE <= IDLE;
                     memoryAddress <= 25'b0;
                     write_data <= 16'b0;
+                    displayData <= displayData;
                 end
                 else begin
                     STATE <= WRITE_WAIT;
                     memoryAddress <= memoryAddress;
                     write_data <= write_data;
+                    displayData <= displayData;
                 end
             end
 
@@ -270,6 +305,7 @@ module inOutControl (
                 STATE <= IDLE;
                 memoryAddress <= 25'b0;
                 write_data <= 16'b0;
+                displayData <= displayData;
             end
 
         endcase
@@ -356,7 +392,7 @@ module inOutControl (
         endcase
     end
 
-    assign displayData = read_data;
+    //assign displayData = displayData;
     assign out_state = STATE;
 
 

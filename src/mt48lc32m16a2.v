@@ -24,7 +24,7 @@
 *                IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR
 *                A PARTICULAR PURPOSE, OR AGAINST INFRINGEMENT.
 *
-*                Copyright © 2001 Micron Semiconductor Products, Inc.
+*                Copyright ï¿½ 2001 Micron Semiconductor Products, Inc.
 *                All rights researved
 *
 * Rev  Author          Date        Changes
@@ -142,7 +142,7 @@ module mt48lc32m16a2 (Dq, Addr, Ba, Clk, Cke, Cs_n, Ras_n, Cas_n, We_n, Dqm);
     parameter tRAS =  37.0;
     parameter tRC  =  60.0;
     parameter tRCD =  15.0;
-    parameter tRFC =  66.0;
+    parameter tRFC =  60.0;
     parameter tRP  =  15.0;
     parameter tRRD =  14.0;
     parameter tWRa =   7.0;     // A2 Version - Auto precharge mode (1 Clk + 7 ns)

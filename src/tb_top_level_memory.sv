@@ -40,7 +40,7 @@ module top_level_memory_controller_tb;
     logic   [24:0]  addr;
     wire	[15:0]	dq;	//goes into the controller
     logic	[15:0]	dq_data;
-    logic	[15:0] 	dqOutput;
+
     logic           ready;
     logic           rst;
     logic           valid;
@@ -62,10 +62,6 @@ module top_level_memory_controller_tb;
     logic DRAM_WE_N;
     logic DRAM_CS_N;
 
-
-    assign dq[15:0] =       cmd == 2'b01 ? DRAM_DQ[15:0] : dq_data[15:0];
-    assign DRAM_DQ[15:0] =  cmd == 2'b01 ? 16'hFFFF : dq[15:0];
-
 // test RESET, WRITE, READ
 
     initial begin
@@ -79,6 +75,26 @@ module top_level_memory_controller_tb;
         key0 <= 1;
         #21 key0 <= 0;
         #200;
+        // this is idle
+        key0 <= 1;
+        #21 key0 <= 0;
+        key0 <= 1;
+        #21 key0 <= 0;
+
+
+        //this is write
+        key1 <= 1;
+        #21 key1 <= 0;
+        key1 <= 1;
+        #21 key1 <= 0;
+        key1 <= 1;
+        #21 key1 <= 0;
+        key1 <= 1;
+        #21 key1 <= 0;
+        key1 <= 1;
+        #21 key1 <= 0;
+        #200;
+        // do a read
         key0 <= 1;
         #21 key0 <= 0;
         key1 <= 1;
@@ -92,39 +108,7 @@ module top_level_memory_controller_tb;
         #200;
         key1 <= 1;
         #21 key1 <= 0;
-        // #70;
 
-        // key0 <= 1;
-        // #21 key0 <= 0;
-        // key1 <= 1;
-        // #21 key1 <= 0;
-        // #70;
-
-        /*
-        // prepare write command
-        rst <= 1'b0;
-        cmd <= 2'b10;
-        addr <= 25'h0FFFF;
-        ready <= 1'b1;
-        dq_data <= 16'hAAAA;
-
-        #6;
-        ready <= 1'b0;
-
-        //submit write command
-        #30;
-
-        // prepare read command
-        rst <= 1'b0;
-        cmd <= 2'b01;
-        addr <= 25'h0FFFF;
-        ready <= 1'b1;
-        dq_data <= 16'hAAAA;
-
-        #6;
-        ready <= 1'b0;
-
-        #30;*/
 
     end
    
@@ -154,7 +138,8 @@ module top_level_memory_controller_tb;
         .clk(clk),
         .cmd(cmd),
         .addr(addr),
-        .dq(dq),
+        .rd_dq(dq),
+        .wr_dq(dq_data),
         .ready(ready),
         
         .rst(rst),

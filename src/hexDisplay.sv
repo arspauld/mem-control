@@ -30,7 +30,8 @@ localparam CHAR_C = 5'd12;
 localparam CHAR_L = 5'd1;
 localparam CHAR_  = 5'd19;
 localparam CHAR_DASH = 5'd20;
-localparam BLANK = 5'd21;
+localparam CHAR_N = 5'd21;
+localparam BLANK = 5'd22;
 
 // Define STATES for execution
 
@@ -51,7 +52,7 @@ localparam WRITE_WAIT   =   13'b1000000000000;
 always_comb begin  
     case (state)
         RESET : begin
-            {char5,char4,char3,char2,char1,char0} = {CHAR_R, 5'd5, CHAR_T, BLANK, BLANK, BLANK};
+            {char5,char4,char3,char2,char1,char0} = {5'd1, CHAR_N, 5'd1, CHAR_T, BLANK, BLANK};
 			end
         IDLE : begin
             {char5,char4,char3,char2,char1,char0} = {5'd1,CHAR_D,CHAR_L,CHAR_E,BLANK,BLANK};
