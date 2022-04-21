@@ -31,7 +31,8 @@ localparam CHAR_L = 5'd1;
 localparam CHAR_  = 5'd19;
 localparam CHAR_DASH = 5'd20;
 localparam CHAR_N = 5'd21;
-localparam BLANK = 5'd22;
+localparam CHAR_DOT = 5'd22;
+localparam BLANK = 5'd23;
 
 // Define STATES for execution
 
@@ -59,7 +60,7 @@ always_comb begin
         end
 
         READ_ST0 : begin
-            {char5,char4,char3,char2,char1,char0} = {CHAR_R,CHAR_E,CHAR_A,CHAR_D,CHAR_,5'd0};
+            {char5,char4,char3,char2,char1,char0} = {CHAR_R,CHAR_E,CHAR_A,CHAR_D,CHAR_DOT,CHAR_DOT};
         end
 
         READ_ST1 : begin
@@ -79,7 +80,7 @@ always_comb begin
         end
 
         WRITE_ST0 : begin
-            {char5,char4,char3,char2,char1,char0} = {CHAR_R,5'd1,CHAR_T,CHAR_E,CHAR_,5'd0};
+            {char5,char4,char3,char2,char1,char0} = {CHAR_R,5'd1,CHAR_T,CHAR_E,CHAR_DOT,CHAR_DOT};
         end
 
         WRITE_ST1 : begin
@@ -91,11 +92,11 @@ always_comb begin
         end
 
         WRITE_ST3 : begin
-            {char5,char4,char3,char2,char1,char0} = {CHAR_R,5'd1,CHAR_T,CHAR_E,CHAR_,5'd3};
+            {char5,char4,char3,char2,char1,char0} = {CHAR_D,CHAR_A,CHAR_T,CHAR_A,CHAR_,5'd1};
         end
 		  
-		  WRITE_ST4 : begin
-            {char5,char4,char3,char2,char1,char0} = {CHAR_R,5'd1,CHAR_T,CHAR_E,CHAR_,5'd4};
+		WRITE_ST4 : begin
+            {char5,char4,char3,char2,char1,char0} = {CHAR_D,CHAR_A,CHAR_T,CHAR_A,CHAR_,5'd2};
         end
 
         WRITE_WAIT : begin
