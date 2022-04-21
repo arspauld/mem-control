@@ -7,7 +7,7 @@
 *
 * Author: Alex Spaulding
 * Date: April 8, 2022
-* Contributors: Will McCormick, Juan Tarat
+* Contributors: Will McCormick, Juan Tarat, Ethan Alexander
 **/
 
 

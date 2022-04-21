@@ -6,7 +6,7 @@
 *
 * Author: Alex 
 * Date: April 8, 2022
-* Contributors: Will McCormick, Juan Tarat
+* Contributors: Will McCormick, Juan Tarat, Ethan Alexander
 **/
 
 /*
@@ -67,47 +67,46 @@ module top_level_memory_controller_tb;
     initial begin
         switches <= 9'b000000011;
         #21;
-        // prepare reset command
-        {key0_debounce,key1_debounce} <= 2'b11;
-        #21;
-        {key0_debounce,key1_debounce} <= 2'b00;
         // submit reset command
-        key0 <= 1;
-        #21 key0 <= 0;
+        {key0_debounce,key1_debounce} <= 2'b11; #21 {key0_debounce,key1_debounce} <= 2'b00;
+        key0 <= 0; key1 <= 0;
+        // IDLE
+        #21 key0 <= 1; #21 key0 <= 0;
         #200;
-        // this is idle
-        key0 <= 1;
-        #21 key0 <= 0;
-        key0 <= 1;
-        #21 key0 <= 0;
+        // Read ..
+        #21 key0 <= 1; #21 key0 <= 0;
+        // Rite ..
+        #21 key0 <= 1; #21 key0 <= 0;
 
 
-        //this is write
-        key1 <= 1;
-        #21 key1 <= 0;
-        key1 <= 1;
-        #21 key1 <= 0;
-        key1 <= 1;
-        #21 key1 <= 0;
-        key1 <= 1;
-        #21 key1 <= 0;
-        key1 <= 1;
-        #21 key1 <= 0;
+        // this is write
+        // Select rite mode
+        #21 key1 <= 1; #21 key1 <= 0;
+        // rite_L
+        #21 key1 <= 1; #21 key1 <= 0;
+        // rite_U
+        #21 key1 <= 1; #21 key1 <= 0;
+        // data_L
+        #21 key1 <= 1; #21 key1 <= 0;
+        // data_U
+        #21 key1 <= 1; #21 key1 <= 0;
+        // back in Idle
         #200;
-        // do a read
-        key0 <= 1;
-        #21 key0 <= 0;
-        key1 <= 1;
-        #21 key1 <= 0;
-        key1 <= 1;
-        #21 key1 <= 0;
-        key1 <= 1;
-        #21 key1 <= 0;
-        key1 <= 1;
-        #21 key1 <= 0;
-        #200;
-        key1 <= 1;
-        #21 key1 <= 0;
+
+        // this is read
+        // Read ..
+        #21 key0 <= 1; #21 key0 <= 0;
+        // Select read mode
+        #21 key1 <= 1; #21 key1 <= 0;
+        // read_L
+        #21 key1 <= 1; #21 key1 <= 0;
+        // read_U
+        #21 key1 <= 1; #21 key1 <= 0;
+        // display read value
+        #400;
+        // return to idle
+        #21 key0 <= 1; #21 key0 <= 0;
+        #500;
 
 
     end
