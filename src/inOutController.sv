@@ -1,3 +1,16 @@
+/**
+* File: inOutController.sv
+
+* Description: Contains the state machine and timing solutions necessary
+* to interface with the memory controller with the human interface
+*
+* Author: Will McCormick
+* Date: April 8, 2022
+* Contributors: Alex Spaulding, Juan Tarat
+**/
+
+
+
 module inOutControl (
     clk,
     key0_debounce,

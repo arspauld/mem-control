@@ -127,19 +127,19 @@ module TopLevel(
 //  REG/WIRE declarations
 //=======================================================
 
-logic	[1:0]		stage;
-logic	[15:0]		valToShow;
-logic 	[3:0]		debouncedSwitches;
-logic				key0Pressed;
-logic				key1Pressed;
+logic		[1:0]		stage;
+logic		[15:0]	valToShow;
+logic 	[8:0]		debouncedSwitches;
+logic					key0Pressed;
+logic					key1Pressed;
 logic 	[1:0]		buttons;
-logic				memDone;
-logic 	[15:0]		memDataIn;
-logic 	[1:0] 		memCmd;    
+logic					memDone;
+logic 	[15:0]	memDataIn;
+logic 	[1:0] 	memCmd;    
 
-logic 	[24:0] 		memAddrOut; 
+logic 	[24:0]	memAddrOut; 
 logic 				ioDone;     
-logic 	[31:0] 		dispData;
+logic 	[31:0]	dispData;
 logic 	[1:0]		modeSelect;
 //inout net
 wire	[15:0]	dq;	//goes into the controller

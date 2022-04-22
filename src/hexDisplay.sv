@@ -1,6 +1,13 @@
-// state 1: print clear = 2'b00
-// state 2: print read = 2'b01
-// state 3: print rlte = 2'b10
+/**
+* File: inOutController.sv
+
+* Description: 7-segment Hex display Controller
+*
+* Source: CPE324-Lab Modified by Juan Tarat
+* Date: April 8, 2022
+* Contributors: Ethan Alexander
+**/
+
 
 module hexDisplay (
     input   [12:0]  state,     
@@ -27,13 +34,12 @@ localparam CHAR_A = 5'd10;
 localparam CHAR_D = 5'd17;
 localparam CHAR_T = 5'd18;  
 localparam CHAR_C = 5'd12;
+localparam CHAR_L = 5'd1;
 localparam CHAR_  = 5'd19;
 localparam CHAR_DASH = 5'd20;
 localparam CHAR_N = 5'd21;
 localparam CHAR_DOT = 5'd22;
-localparam CHAR_L = 5'd23;
-localparam CHAR_U = 5'd24;
-localparam BLANK = 5'd25;
+localparam BLANK = 5'd23;
 
 // Define STATES for execution
 
@@ -61,7 +67,7 @@ always_comb begin
         end
 
         READ_ST0 : begin
-            {char5,char4,char3,char2,char1,char0} = {CHAR_R,CHAR_E,CHAR_A,CHAR_D,CHAR_,5'd0};
+            {char5,char4,char3,char2,char1,char0} = {CHAR_R,CHAR_E,CHAR_A,CHAR_D,CHAR_DOT,CHAR_DOT};
         end
 
         READ_ST1 : begin
@@ -81,7 +87,7 @@ always_comb begin
         end
 
         WRITE_ST0 : begin
-            {char5,char4,char3,char2,char1,char0} = {CHAR_R,5'd1,CHAR_T,CHAR_E,CHAR_,5'd0};
+            {char5,char4,char3,char2,char1,char0} = {CHAR_R,5'd1,CHAR_T,CHAR_E,CHAR_DOT,CHAR_DOT};
         end
 
         WRITE_ST1 : begin
@@ -93,11 +99,11 @@ always_comb begin
         end
 
         WRITE_ST3 : begin
-            {char5,char4,char3,char2,char1,char0} = {CHAR_D,CHAR_A,CHAR_T,CHAR_A,CHAR_,CHAR_L};
+            {char5,char4,char3,char2,char1,char0} = {CHAR_D,CHAR_A,CHAR_T,CHAR_A,CHAR_,5'd1};
         end
 		  
 		WRITE_ST4 : begin
-            {char5,char4,char3,char2,char1,char0} = {CHAR_D,CHAR_A,CHAR_T,CHAR_A,CHAR_,CHAR_U};
+            {char5,char4,char3,char2,char1,char0} = {CHAR_D,CHAR_A,CHAR_T,CHAR_A,CHAR_,5'd2};
         end
 
         WRITE_WAIT : begin

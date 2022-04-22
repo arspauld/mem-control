@@ -1,3 +1,13 @@
+/**
+* File: inOutController.sv
+
+* Description: The module takes a 5 bit input and 
+* sends the 8 bit to the hex display
+*
+* Source: CPE324-Lab Modified by Juan Tarat
+* Date: April 8, 2022
+* Contributors: Ethan Alexander
+**/
 module hexDriver(
     input [4:0] inVal,
     output reg [7:0] outVal
